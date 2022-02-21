@@ -24,9 +24,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include "video-metadata/vmeta.pb-c.h"
 #include "vmeta_priv.h"
-
-ULOG_DECLARE_TAG(vmeta);
 
 #define SINGULARITY_RADIUS (0.00001f)
 
@@ -120,8 +119,9 @@ int vmeta_frame_get_location(struct vmeta_frame *meta,
 {
 	int res = 0;
 	const Vmeta__TimedMetadata *tm;
-	ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(loc == NULL, EINVAL);
+	if(meta == NULL || loc == NULL) return -EINVAL;
+	//ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(loc == NULL, EINVAL);
 	memset(loc, 0, sizeof(*loc));
 
 	switch (meta->type) {
@@ -167,7 +167,7 @@ int vmeta_frame_get_location(struct vmeta_frame *meta,
 		break;
 
 	default:
-		ULOGW("unknown metadata type: %u", meta->type);
+		//ULOGW("unknown metadata type: %u", meta->type);
 		res = -ENOSYS;
 		break;
 	}
@@ -180,8 +180,11 @@ int vmeta_frame_get_speed_ned(struct vmeta_frame *meta, struct vmeta_ned *speed)
 {
 	int res = 0;
 	const Vmeta__TimedMetadata *tm;
-	ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(speed == NULL, EINVAL);
+
+	if(meta == NULL || speed == NULL) return -EINVAL;
+
+	//ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(speed == NULL, EINVAL);
 	memset(speed, 0, sizeof(*speed));
 
 	switch (meta->type) {
@@ -228,7 +231,7 @@ int vmeta_frame_get_speed_ned(struct vmeta_frame *meta, struct vmeta_ned *speed)
 		break;
 
 	default:
-		ULOGW("unknown metadata type: %u", meta->type);
+		//ULOGW("unknown metadata type: %u", meta->type);
 		res = -ENOSYS;
 		break;
 	}
@@ -240,9 +243,12 @@ int vmeta_frame_get_speed_ned(struct vmeta_frame *meta, struct vmeta_ned *speed)
 int vmeta_frame_get_air_speed(struct vmeta_frame *meta, float *speed)
 {
 	int res = 0;
-	ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(speed == NULL, EINVAL);
-	*speed = -1.;
+
+	if(meta == NULL || speed == NULL) return -EINVAL;
+
+	//ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(speed == NULL, EINVAL);
+	*speed = -1;
 
 	switch (meta->type) {
 	case VMETA_FRAME_TYPE_NONE:
@@ -265,7 +271,7 @@ int vmeta_frame_get_air_speed(struct vmeta_frame *meta, float *speed)
 		break;
 
 	default:
-		ULOGW("unknown metadata type: %u", meta->type);
+		//ULOGW("unknown metadata type: %u", meta->type);
 		res = -ENOSYS;
 		break;
 	}
@@ -278,8 +284,11 @@ int vmeta_frame_get_ground_distance(struct vmeta_frame *meta, double *dist)
 {
 	int res = 0;
 	const Vmeta__TimedMetadata *tm;
-	ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(dist == NULL, EINVAL);
+
+	if(meta == NULL || dist == NULL) return -EINVAL;
+
+	//ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(dist == NULL, EINVAL);
 	*dist = 0.;
 
 	switch (meta->type) {
@@ -318,7 +327,7 @@ int vmeta_frame_get_ground_distance(struct vmeta_frame *meta, double *dist)
 		break;
 
 	default:
-		ULOGW("unknown metadata type: %u", meta->type);
+		//ULOGW("unknown metadata type: %u", meta->type);
 		res = -ENOSYS;
 		break;
 	}
@@ -333,8 +342,11 @@ int vmeta_frame_get_drone_euler(struct vmeta_frame *meta,
 	int res = 0;
 	const Vmeta__TimedMetadata *tm;
 	struct vmeta_quaternion tmp;
-	ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(euler == NULL, EINVAL);
+
+	if(meta == NULL || euler == NULL) return -EINVAL;
+
+	//ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(euler == NULL, EINVAL);
 	memset(euler, 0, sizeof(*euler));
 
 	switch (meta->type) {
@@ -380,7 +392,7 @@ int vmeta_frame_get_drone_euler(struct vmeta_frame *meta,
 		break;
 
 	default:
-		ULOGW("unknown metadata type: %u", meta->type);
+		//ULOGW("unknown metadata type: %u", meta->type);
 		res = -ENOSYS;
 		break;
 	}
@@ -394,8 +406,11 @@ int vmeta_frame_get_drone_quat(struct vmeta_frame *meta,
 {
 	int res = 0;
 	const Vmeta__TimedMetadata *tm;
-	ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(quat == NULL, EINVAL);
+
+	if(meta == NULL || quat == NULL) return -EINVAL;
+
+	//ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(quat == NULL, EINVAL);
 	memset(quat, 0, sizeof(*quat));
 
 	switch (meta->type) {
@@ -440,7 +455,7 @@ int vmeta_frame_get_drone_quat(struct vmeta_frame *meta,
 		break;
 
 	default:
-		ULOGW("unknown metadata type: %u", meta->type);
+		//ULOGW("unknown metadata type: %u", meta->type);
 		res = -ENOSYS;
 		break;
 	}
@@ -455,8 +470,11 @@ int vmeta_frame_get_frame_euler(struct vmeta_frame *meta,
 	int res = 0;
 	const Vmeta__TimedMetadata *tm;
 	struct vmeta_quaternion tmp;
-	ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(euler == NULL, EINVAL);
+
+	if(meta == NULL || euler == NULL) return -EINVAL;
+
+	//ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(euler == NULL, EINVAL);
 	memset(euler, 0, sizeof(*euler));
 
 	switch (meta->type) {
@@ -502,7 +520,7 @@ int vmeta_frame_get_frame_euler(struct vmeta_frame *meta,
 		break;
 
 	default:
-		ULOGW("unknown metadata type: %u", meta->type);
+		//ULOGW("unknown metadata type: %u", meta->type);
 		res = -ENOSYS;
 		break;
 	}
@@ -516,8 +534,11 @@ int vmeta_frame_get_frame_quat(struct vmeta_frame *meta,
 {
 	int res = 0;
 	const Vmeta__TimedMetadata *tm;
-	ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(quat == NULL, EINVAL);
+
+	if(meta == NULL || quat == NULL) return -EINVAL;
+
+	//ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(quat == NULL, EINVAL);
 	memset(quat, 0, sizeof(*quat));
 
 	switch (meta->type) {
@@ -562,7 +583,7 @@ int vmeta_frame_get_frame_quat(struct vmeta_frame *meta,
 		break;
 
 	default:
-		ULOGW("unknown metadata type: %u", meta->type);
+		//ULOGW("unknown metadata type: %u", meta->type);
 		res = -ENOSYS;
 		break;
 	}
@@ -577,8 +598,11 @@ int vmeta_frame_get_frame_base_euler(struct vmeta_frame *meta,
 	int res = 0;
 	const Vmeta__TimedMetadata *tm;
 	struct vmeta_quaternion tmp;
-	ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(euler == NULL, EINVAL);
+
+	if(meta == NULL || euler == NULL) return -EINVAL;
+
+	//ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(euler == NULL, EINVAL);
 	memset(euler, 0, sizeof(*euler));
 
 	switch (meta->type) {
@@ -612,7 +636,7 @@ int vmeta_frame_get_frame_base_euler(struct vmeta_frame *meta,
 		break;
 
 	default:
-		ULOGW("unknown metadata type: %u", meta->type);
+		//ULOGW("unknown metadata type: %u", meta->type);
 		res = -ENOSYS;
 		break;
 	}
@@ -626,8 +650,11 @@ int vmeta_frame_get_frame_base_quat(struct vmeta_frame *meta,
 {
 	int res = 0;
 	const Vmeta__TimedMetadata *tm;
-	ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(quat == NULL, EINVAL);
+
+	if(meta == NULL || quat == NULL) return -EINVAL;
+
+	//ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(quat == NULL, EINVAL);
 	memset(quat, 0, sizeof(*quat));
 
 	switch (meta->type) {
@@ -660,7 +687,7 @@ int vmeta_frame_get_frame_base_quat(struct vmeta_frame *meta,
 		break;
 
 	default:
-		ULOGW("unknown metadata type: %u", meta->type);
+		//ULOGW("unknown metadata type: %u", meta->type);
 		res = -ENOSYS;
 		break;
 	}
@@ -674,8 +701,11 @@ int vmeta_frame_get_frame_timestamp(struct vmeta_frame *meta,
 {
 	int res = 0;
 	const Vmeta__TimedMetadata *tm;
-	ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(timestamp == NULL, EINVAL);
+
+	if(meta == NULL || timestamp == NULL) return -EINVAL;
+
+	//ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(timestamp == NULL, EINVAL);
 	*timestamp = 0;
 
 	switch (meta->type) {
@@ -717,7 +747,7 @@ int vmeta_frame_get_frame_timestamp(struct vmeta_frame *meta,
 		break;
 
 	default:
-		ULOGW("unknown metadata type: %u", meta->type);
+		//ULOGW("unknown metadata type: %u", meta->type);
 		res = -ENOSYS;
 		break;
 	}
@@ -729,9 +759,12 @@ int vmeta_frame_get_frame_timestamp(struct vmeta_frame *meta,
 int vmeta_frame_get_camera_pan(struct vmeta_frame *meta, float *pan)
 {
 	int res = 0;
-	ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(pan == NULL, EINVAL);
-	*pan = 0.;
+
+	if(meta == NULL || pan == NULL) return -EINVAL;
+
+	//ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(pan == NULL, EINVAL);
+	*pan = 0;
 
 	switch (meta->type) {
 	case VMETA_FRAME_TYPE_NONE:
@@ -757,7 +790,7 @@ int vmeta_frame_get_camera_pan(struct vmeta_frame *meta, float *pan)
 		break;
 
 	default:
-		ULOGW("unknown metadata type: %u", meta->type);
+		//ULOGW("unknown metadata type: %u", meta->type);
 		res = -ENOSYS;
 		break;
 	}
@@ -769,9 +802,12 @@ int vmeta_frame_get_camera_pan(struct vmeta_frame *meta, float *pan)
 int vmeta_frame_get_camera_tilt(struct vmeta_frame *meta, float *tilt)
 {
 	int res = 0;
-	ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(tilt == NULL, EINVAL);
-	*tilt = 0.;
+
+	if(meta == NULL || tilt == NULL) return -EINVAL;
+
+	//ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(tilt == NULL, EINVAL);
+	*tilt = 0;
 
 	switch (meta->type) {
 	case VMETA_FRAME_TYPE_NONE:
@@ -797,7 +833,7 @@ int vmeta_frame_get_camera_tilt(struct vmeta_frame *meta, float *tilt)
 		break;
 
 	default:
-		ULOGW("unknown metadata type: %u", meta->type);
+		//ULOGW("unknown metadata type: %u", meta->type);
 		res = -ENOSYS;
 		break;
 	}
@@ -810,9 +846,12 @@ int vmeta_frame_get_exposure_time(struct vmeta_frame *meta, float *exp)
 {
 	int res = 0;
 	const Vmeta__TimedMetadata *tm;
-	ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(exp == NULL, EINVAL);
-	*exp = 0.;
+
+	if(meta == NULL || exp == NULL) return -EINVAL;
+
+	//ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(exp == NULL, EINVAL);
+	*exp = 0;
 
 	switch (meta->type) {
 	case VMETA_FRAME_TYPE_NONE:
@@ -853,7 +892,7 @@ int vmeta_frame_get_exposure_time(struct vmeta_frame *meta, float *exp)
 		break;
 
 	default:
-		ULOGW("unknown metadata type: %u", meta->type);
+		//ULOGW("unknown metadata type: %u", meta->type);
 		res = -ENOSYS;
 		break;
 	}
@@ -866,8 +905,11 @@ int vmeta_frame_get_gain(struct vmeta_frame *meta, uint16_t *gain)
 {
 	int res = 0;
 	const Vmeta__TimedMetadata *tm;
-	ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(gain == NULL, EINVAL);
+
+	if(meta == NULL || gain == NULL) return -EINVAL;
+
+	//ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(gain == NULL, EINVAL);
 	*gain = 0;
 
 	switch (meta->type) {
@@ -909,7 +951,7 @@ int vmeta_frame_get_gain(struct vmeta_frame *meta, uint16_t *gain)
 		break;
 
 	default:
-		ULOGW("unknown metadata type: %u", meta->type);
+		//ULOGW("unknown metadata type: %u", meta->type);
 		res = -ENOSYS;
 		break;
 	}
@@ -922,9 +964,12 @@ int vmeta_frame_get_awb_r_gain(struct vmeta_frame *meta, float *gain)
 {
 	int res = 0;
 	const Vmeta__TimedMetadata *tm;
-	ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(gain == NULL, EINVAL);
-	*gain = 0.;
+
+	if(meta == NULL || gain == NULL) return -EINVAL;
+
+	//ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(gain == NULL, EINVAL);
+	*gain = 0;
 
 	switch (meta->type) {
 	case VMETA_FRAME_TYPE_NONE:
@@ -953,7 +998,7 @@ int vmeta_frame_get_awb_r_gain(struct vmeta_frame *meta, float *gain)
 		break;
 
 	default:
-		ULOGW("unknown metadata type: %u", meta->type);
+		//ULOGW("unknown metadata type: %u", meta->type);
 		res = -ENOSYS;
 		break;
 	}
@@ -966,9 +1011,12 @@ int vmeta_frame_get_awb_b_gain(struct vmeta_frame *meta, float *gain)
 {
 	int res = 0;
 	const Vmeta__TimedMetadata *tm;
-	ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(gain == NULL, EINVAL);
-	*gain = 0.;
+
+	if(meta == NULL || gain == NULL) return -EINVAL;
+
+	//ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(gain == NULL, EINVAL);
+	*gain = 0;
 
 	switch (meta->type) {
 	case VMETA_FRAME_TYPE_NONE:
@@ -997,7 +1045,7 @@ int vmeta_frame_get_awb_b_gain(struct vmeta_frame *meta, float *gain)
 		break;
 
 	default:
-		ULOGW("unknown metadata type: %u", meta->type);
+		//ULOGW("unknown metadata type: %u", meta->type);
 		res = -ENOSYS;
 		break;
 	}
@@ -1010,9 +1058,12 @@ int vmeta_frame_get_picture_h_fov(struct vmeta_frame *meta, float *fov)
 {
 	int res = 0;
 	const Vmeta__TimedMetadata *tm;
-	ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(fov == NULL, EINVAL);
-	*fov = 0.;
+
+	if(meta == NULL || fov == NULL) return -EINVAL;
+
+	//ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(fov == NULL, EINVAL);
+	*fov = 0;
 
 	switch (meta->type) {
 	case VMETA_FRAME_TYPE_NONE:
@@ -1041,7 +1092,7 @@ int vmeta_frame_get_picture_h_fov(struct vmeta_frame *meta, float *fov)
 		break;
 
 	default:
-		ULOGW("unknown metadata type: %u", meta->type);
+		//ULOGW("unknown metadata type: %u", meta->type);
 		res = -ENOSYS;
 		break;
 	}
@@ -1054,9 +1105,12 @@ int vmeta_frame_get_picture_v_fov(struct vmeta_frame *meta, float *fov)
 {
 	int res = 0;
 	const Vmeta__TimedMetadata *tm;
-	ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(fov == NULL, EINVAL);
-	*fov = 0.;
+
+	if(meta == NULL || fov == NULL) return -EINVAL;
+
+	//ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(fov == NULL, EINVAL);
+	*fov = 0;
 
 	switch (meta->type) {
 	case VMETA_FRAME_TYPE_NONE:
@@ -1085,7 +1139,7 @@ int vmeta_frame_get_picture_v_fov(struct vmeta_frame *meta, float *fov)
 		break;
 
 	default:
-		ULOGW("unknown metadata type: %u", meta->type);
+		//ULOGW("unknown metadata type: %u", meta->type);
 		res = -ENOSYS;
 		break;
 	}
@@ -1098,8 +1152,11 @@ int vmeta_frame_get_link_goodput(struct vmeta_frame *meta, uint32_t *goodput)
 {
 	int res = 0;
 	const Vmeta__TimedMetadata *tm;
-	ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(goodput == NULL, EINVAL);
+
+	if(meta == NULL || goodput == NULL) return -EINVAL;
+
+	//ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(goodput == NULL, EINVAL);
 	*goodput = 0;
 
 	switch (meta->type) {
@@ -1138,7 +1195,7 @@ int vmeta_frame_get_link_goodput(struct vmeta_frame *meta, uint32_t *goodput)
 		break;
 
 	default:
-		ULOGW("unknown metadata type: %u", meta->type);
+		//ULOGW("unknown metadata type: %u", meta->type);
 		res = -ENOSYS;
 		break;
 	}
@@ -1151,8 +1208,11 @@ int vmeta_frame_get_link_quality(struct vmeta_frame *meta, uint8_t *quality)
 {
 	int res = 0;
 	const Vmeta__TimedMetadata *tm;
-	ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(quality == NULL, EINVAL);
+
+	if(meta == NULL || quality == NULL) return -EINVAL;
+
+	//ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(quality == NULL, EINVAL);
 	*quality = 0;
 
 	switch (meta->type) {
@@ -1191,7 +1251,7 @@ int vmeta_frame_get_link_quality(struct vmeta_frame *meta, uint8_t *quality)
 		break;
 
 	default:
-		ULOGW("unknown metadata type: %u", meta->type);
+		//ULOGW("unknown metadata type: %u", meta->type);
 		res = -ENOSYS;
 		break;
 	}
@@ -1204,8 +1264,11 @@ int vmeta_frame_get_wifi_rssi(struct vmeta_frame *meta, int8_t *rssi)
 {
 	int res = 0;
 	const Vmeta__TimedMetadata *tm;
-	ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(rssi == NULL, EINVAL);
+
+	if(meta == NULL || rssi == NULL) return -EINVAL;
+
+	//ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(rssi == NULL, EINVAL);
 	*rssi = 0;
 
 	switch (meta->type) {
@@ -1256,7 +1319,7 @@ int vmeta_frame_get_wifi_rssi(struct vmeta_frame *meta, int8_t *rssi)
 		break;
 
 	default:
-		ULOGW("unknown metadata type: %u", meta->type);
+		//ULOGW("unknown metadata type: %u", meta->type);
 		res = -ENOSYS;
 		break;
 	}
@@ -1269,8 +1332,11 @@ int vmeta_frame_get_battery_percentage(struct vmeta_frame *meta, uint8_t *bat)
 {
 	int res = 0;
 	const Vmeta__TimedMetadata *tm;
-	ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(bat == NULL, EINVAL);
+
+	if(meta == NULL || bat == NULL) return -EINVAL;
+
+	//ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(bat == NULL, EINVAL);
 	*bat = 255;
 
 	switch (meta->type) {
@@ -1312,7 +1378,7 @@ int vmeta_frame_get_battery_percentage(struct vmeta_frame *meta, uint8_t *bat)
 		break;
 
 	default:
-		ULOGW("unknown metadata type: %u", meta->type);
+		//ULOGW("unknown metadata type: %u", meta->type);
 		res = -ENOSYS;
 		break;
 	}
@@ -1326,8 +1392,11 @@ int vmeta_frame_get_flying_state(struct vmeta_frame *meta,
 {
 	int res = 0;
 	const Vmeta__TimedMetadata *tm;
-	ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(state == NULL, EINVAL);
+
+	if(meta == NULL || state == NULL) return -EINVAL;
+
+	//ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(state == NULL, EINVAL);
 	*state = VMETA_FLYING_STATE_LANDED;
 
 	switch (meta->type) {
@@ -1367,7 +1436,7 @@ int vmeta_frame_get_flying_state(struct vmeta_frame *meta,
 		break;
 
 	default:
-		ULOGW("unknown metadata type: %u", meta->type);
+		//ULOGW("unknown metadata type: %u", meta->type);
 		res = -ENOSYS;
 		break;
 	}
@@ -1380,8 +1449,11 @@ int vmeta_frame_get_piloting_mode(struct vmeta_frame *meta,
 				  enum vmeta_piloting_mode *mode)
 {
 	int res = 0;
-	ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(mode == NULL, EINVAL);
+
+	if(meta == NULL || mode == NULL) return -EINVAL;
+
+	//ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(mode == NULL, EINVAL);
 	*mode = VMETA_PILOTING_MODE_MANUAL;
 
 	switch (meta->type) {
@@ -1408,7 +1480,7 @@ int vmeta_frame_get_piloting_mode(struct vmeta_frame *meta,
 		break;
 
 	default:
-		ULOGW("unknown metadata type: %u", meta->type);
+		//ULOGW("unknown metadata type: %u", meta->type);
 		res = -ENOSYS;
 		break;
 	}
@@ -1433,7 +1505,7 @@ enum vmeta_camera_type vmeta_camera_type_from_str(const char *str)
 	} else if (strcasecmp(str, "disparity") == 0) {
 		return VMETA_CAMERA_TYPE_DISPARITY;
 	} else {
-		ULOGW("%s: unknown camera type '%s'", __func__, str);
+		//ULOGW("%s: unknown camera type '%s'", __func__, str);
 		return VMETA_CAMERA_TYPE_UNKNOWN;
 	}
 }
@@ -1470,7 +1542,7 @@ enum vmeta_video_mode vmeta_video_mode_from_str(const char *str)
 	} else if (strcasecmp(str, "slowmotion") == 0) {
 		return VMETA_VIDEO_MODE_SLOWMOTION;
 	} else {
-		ULOGW("%s: unknown video mode '%s'", __func__, str);
+		//ULOGW("%s: unknown video mode '%s'", __func__, str);
 		return VMETA_VIDEO_MODE_UNKNOWN;
 	}
 }
@@ -1511,7 +1583,7 @@ enum vmeta_video_stop_reason vmeta_video_stop_reason_from_str(const char *str)
 	} else if (strcasecmp(str, "shutdown") == 0) {
 		return VMETA_VIDEO_STOP_REASON_SHUTDOWN;
 	} else {
-		ULOGW("%s: unknown stop reason '%s'", __func__, str);
+		//ULOGW("%s: unknown stop reason '%s'", __func__, str);
 		return VMETA_VIDEO_STOP_REASON_UNKNOWN;
 	}
 }
@@ -1591,7 +1663,7 @@ enum vmeta_dynamic_range vmeta_dynamic_range_from_str(const char *str)
 	} else if (strcasecmp(str, "hdr10") == 0) {
 		return VMETA_DYNAMIC_RANGE_HDR10;
 	} else {
-		ULOGW("%s: unknown dynamic range '%s'", __func__, str);
+		//ULOGW("%s: unknown dynamic range '%s'", __func__, str);
 		return VMETA_DYNAMIC_RANGE_UNKNOWN;
 	}
 }
@@ -1622,7 +1694,7 @@ enum vmeta_tone_mapping vmeta_tone_mapping_from_str(const char *str)
 	} else if (strcasecmp(str, "p-log") == 0) {
 		return VMETA_TONE_MAPPING_P_LOG;
 	} else {
-		ULOGW("%s: unknown tone mapping '%s'", __func__, str);
+		//ULOGW("%s: unknown tone mapping '%s'", __func__, str);
 		return VMETA_TONE_MAPPING_UNKNOWN;
 	}
 }

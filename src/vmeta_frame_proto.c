@@ -24,6 +24,7 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include "video-metadata/vmeta_frame_proto.h"
 #include "vmeta_priv.h"
 
 struct vmeta_frame_proto {
@@ -121,7 +122,8 @@ int vmeta_frame_proto_init(struct vmeta_frame_proto **meta)
 	int res;
 	struct vmeta_frame_proto *l_meta;
 
-	ULOG_ERRNO_RETURN_ERR_IF(!meta, EINVAL);
+	if(!meta) return -EINVAL;
+	//ULOG_ERRNO_RETURN_ERR_IF(!meta, EINVAL);
 
 	res = vmeta_frame_proto_alloc(&l_meta);
 	if (res != 0)
@@ -151,8 +153,9 @@ int vmeta_frame_proto_read(struct vmeta_buffer *buf,
 	size_t alloc_len;
 	struct vmeta_frame_proto *l_meta;
 
-	ULOG_ERRNO_RETURN_ERR_IF(!buf, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(!meta, EINVAL);
+	if(!buf || !meta) return -EINVAL;
+	//ULOG_ERRNO_RETURN_ERR_IF(!buf, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(!meta, EINVAL);
 
 	res = vmeta_frame_proto_alloc(&l_meta);
 	if (res != 0)
@@ -184,8 +187,9 @@ int vmeta_frame_proto_write(struct vmeta_buffer *buf, struct vmeta_frame *meta)
 {
 	int res = 0;
 
-	ULOG_ERRNO_RETURN_ERR_IF(!buf, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(!meta, EINVAL);
+	if(!buf || !meta) return -EINVAL;
+	//ULOG_ERRNO_RETURN_ERR_IF(!buf, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(!meta, EINVAL);
 
 	pthread_mutex_lock(&meta->proto->lock);
 
@@ -207,7 +211,7 @@ out:
 }
 
 
-int vmeta_frame_proto_to_json(struct vmeta_frame *meta,
+/*int vmeta_frame_proto_to_json(struct vmeta_frame *meta,
 			      struct json_object *jobj)
 {
 	int ret = 0;
@@ -216,27 +220,28 @@ int vmeta_frame_proto_to_json(struct vmeta_frame *meta,
 	ret = vmeta_frame_proto_get_unpacked(
 		meta, (const Vmeta__TimedMetadata **)&timed_meta);
 	if (ret < 0) {
-		ULOG_ERRNO("vmeta_frame_proto_get_unpacked", -ret);
+		//ULOG_ERRNO("vmeta_frame_proto_get_unpacked", -ret);
 		goto error;
 	}
 	ret = vmeta_json_proto_add_timed_metadata(jobj, timed_meta);
 	if (ret < 0) {
-		ULOG_ERRNO("vmeta_json_add_proto_timed_metadata", -ret);
+		//ULOG_ERRNO("vmeta_json_add_proto_timed_metadata", -ret);
 		goto error;
 	}
 error:
 	ret = vmeta_frame_proto_release_unpacked(meta, timed_meta);
 	if (ret < 0)
-		ULOG_ERRNO("vmeta_frame_proto_release_unpacked", -ret);
+		//ULOG_ERRNO("vmeta_frame_proto_release_unpacked", -ret);
 	return ret;
-}
+}*/
 
 
 int vmeta_frame_proto_destroy(struct vmeta_frame_proto *meta)
 {
-	ULOG_ERRNO_RETURN_ERR_IF(!meta, EINVAL);
+	if(!meta) return -EINVAL;
+	//ULOG_ERRNO_RETURN_ERR_IF(!meta, EINVAL);
 
-	if (meta->rp_lock)
+	/*if (meta->rp_lock)
 		ULOGW("metadata destroyed with %" PRIu32
 		      " packed-read-lock held",
 		      meta->rp_lock);
@@ -246,7 +251,7 @@ int vmeta_frame_proto_destroy(struct vmeta_frame_proto *meta)
 		      meta->ru_lock);
 	if (meta->w_lock)
 		ULOGW("metadata destroyed with write-lock held");
-
+	*/
 	if (meta->packed)
 		free(meta->buf);
 
@@ -265,10 +270,13 @@ int vmeta_frame_proto_get_unpacked(struct vmeta_frame *meta,
 {
 	int ret = 0;
 
-	ULOG_ERRNO_RETURN_ERR_IF(!meta, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(!proto_meta, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(meta->type != VMETA_FRAME_TYPE_PROTO, EPROTO);
-	ULOG_ERRNO_RETURN_ERR_IF(!meta->proto, EINVAL);
+	if(!meta || !proto_meta || !meta->proto) return -EINVAL;
+	if(meta->type != VMETA_FRAME_TYPE_PROTO) return -EPROTO;
+
+	//ULOG_ERRNO_RETURN_ERR_IF(!meta, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(!proto_meta, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(meta->type != VMETA_FRAME_TYPE_PROTO, EPROTO);
+	//ULOG_ERRNO_RETURN_ERR_IF(!meta->proto, EINVAL);
 
 	pthread_mutex_lock(&meta->proto->lock);
 
@@ -296,21 +304,24 @@ int vmeta_frame_proto_release_unpacked(struct vmeta_frame *meta,
 {
 	int ret = 0;
 
-	ULOG_ERRNO_RETURN_ERR_IF(!meta, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(!proto_meta, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(meta->type != VMETA_FRAME_TYPE_PROTO, EPROTO);
-	ULOG_ERRNO_RETURN_ERR_IF(!meta->proto, EINVAL);
+	if(!meta || !proto_meta || !meta->proto) return -EINVAL;
+	if(meta->type != VMETA_FRAME_TYPE_PROTO) return -EPROTO;
+
+	//ULOG_ERRNO_RETURN_ERR_IF(!meta, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(!proto_meta, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(meta->type != VMETA_FRAME_TYPE_PROTO, EPROTO);
+	//ULOG_ERRNO_RETURN_ERR_IF(!meta->proto, EINVAL);
 
 	pthread_mutex_lock(&meta->proto->lock);
 
 	if (!meta->proto->ru_lock) {
-		ULOGW("%s called with no unpacked-read-lock held", __func__);
+		//ULOGW("%s called with no unpacked-read-lock held", __func__);
 		ret = -EPROTO;
 		goto out;
 	}
 
 	if (!meta->proto->unpacked || proto_meta != meta->proto->meta) {
-		ULOGW("%s called with a wrong proto_meta", __func__);
+		//ULOGW("%s called with a wrong proto_meta", __func__);
 		ret = -EPROTO;
 		goto out;
 	}
@@ -329,10 +340,13 @@ int vmeta_frame_proto_get_unpacked_rw(struct vmeta_frame *meta,
 {
 	int ret = 0;
 
-	ULOG_ERRNO_RETURN_ERR_IF(!meta, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(!proto_meta, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(meta->type != VMETA_FRAME_TYPE_PROTO, EPROTO);
-	ULOG_ERRNO_RETURN_ERR_IF(!meta->proto, EINVAL);
+	if(!meta || !proto_meta || !meta->proto) return -EINVAL;
+	if(meta->type != VMETA_FRAME_TYPE_PROTO) return -EPROTO;
+
+	//ULOG_ERRNO_RETURN_ERR_IF(!meta, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(!proto_meta, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(meta->type != VMETA_FRAME_TYPE_PROTO, EPROTO);
+	//ULOG_ERRNO_RETURN_ERR_IF(!meta->proto, EINVAL);
 
 	pthread_mutex_lock(&meta->proto->lock);
 
@@ -361,21 +375,24 @@ int vmeta_frame_proto_release_unpacked_rw(struct vmeta_frame *meta,
 {
 	int ret = 0;
 
-	ULOG_ERRNO_RETURN_ERR_IF(!meta, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(!proto_meta, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(meta->type != VMETA_FRAME_TYPE_PROTO, EPROTO);
-	ULOG_ERRNO_RETURN_ERR_IF(!meta->proto, EINVAL);
+	if(!meta || !proto_meta || !meta->proto) return -EINVAL;
+	if(meta->type != VMETA_FRAME_TYPE_PROTO) return -EPROTO;
+
+	//ULOG_ERRNO_RETURN_ERR_IF(!meta, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(!proto_meta, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(meta->type != VMETA_FRAME_TYPE_PROTO, EPROTO);
+	//ULOG_ERRNO_RETURN_ERR_IF(!meta->proto, EINVAL);
 
 	pthread_mutex_lock(&meta->proto->lock);
 
 	if (!meta->proto->w_lock) {
-		ULOGW("%s called with no write-lock held", __func__);
+		//ULOGW("%s called with no write-lock held", __func__);
 		ret = -EPROTO;
 		goto out;
 	}
 
 	if (!meta->proto->unpacked || proto_meta != meta->proto->meta) {
-		ULOGW("%s called with a wrong proto_meta", __func__);
+		//ULOGW("%s called with a wrong proto_meta", __func__);
 		ret = -EPROTO;
 		goto out;
 	}
@@ -402,11 +419,14 @@ int vmeta_frame_proto_get_buffer(struct vmeta_frame *meta,
 {
 	int ret = 0;
 
-	ULOG_ERRNO_RETURN_ERR_IF(!meta, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(!buf, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(!len, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(meta->type != VMETA_FRAME_TYPE_PROTO, EPROTO);
-	ULOG_ERRNO_RETURN_ERR_IF(!meta->proto, EINVAL);
+	if(!meta || !buf || !len || !meta->proto) return -EINVAL;
+	if(meta->type != VMETA_FRAME_TYPE_PROTO) return -EPROTO;
+
+	//ULOG_ERRNO_RETURN_ERR_IF(!meta, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(!buf, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(!len, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(meta->type != VMETA_FRAME_TYPE_PROTO, EPROTO);
+	//ULOG_ERRNO_RETURN_ERR_IF(!meta->proto, EINVAL);
 
 	pthread_mutex_lock(&meta->proto->lock);
 
@@ -435,21 +455,24 @@ int vmeta_frame_proto_release_buffer(struct vmeta_frame *meta,
 {
 	int ret = 0;
 
-	ULOG_ERRNO_RETURN_ERR_IF(!meta, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(!buf, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(meta->type != VMETA_FRAME_TYPE_PROTO, EPROTO);
-	ULOG_ERRNO_RETURN_ERR_IF(!meta->proto, EINVAL);
+	if(!meta || !buf || !meta->proto) return -EINVAL;
+	if(meta->type != VMETA_FRAME_TYPE_PROTO) return -EPROTO;
+
+	//ULOG_ERRNO_RETURN_ERR_IF(!meta, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(!buf, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(meta->type != VMETA_FRAME_TYPE_PROTO, EPROTO);
+	//ULOG_ERRNO_RETURN_ERR_IF(!meta->proto, EINVAL);
 
 	pthread_mutex_lock(&meta->proto->lock);
 
 	if (!meta->proto->rp_lock) {
-		ULOGW("%s called with no packed-read-lock held", __func__);
+		//ULOGW("%s called with no packed-read-lock held", __func__);
 		ret = -EPROTO;
 		goto out;
 	}
 
 	if (!meta->proto->packed || buf != meta->proto->buf) {
-		ULOGW("%s called with a wrong buffer", __func__);
+		//ULOGW("%s called with a wrong buffer", __func__);
 		ret = -EPROTO;
 		goto out;
 	}
@@ -467,14 +490,16 @@ Vmeta__CameraMetadata *vmeta_frame_proto_get_camera(Vmeta__TimedMetadata *meta)
 {
 	Vmeta__CameraMetadata *camera;
 
-	ULOG_ERRNO_RETURN_VAL_IF(!meta, EINVAL, NULL);
+	if(!meta) return NULL;
+
+	//ULOG_ERRNO_RETURN_VAL_IF(!meta, EINVAL, NULL);
 
 	if (meta->camera)
 		return meta->camera;
 
 	camera = calloc(1, sizeof(*camera));
 	if (!camera) {
-		ULOG_ERRNO("calloc", ENOMEM);
+		//ULOG_ERRNO("calloc", ENOMEM);
 		return NULL;
 	}
 	vmeta__camera_metadata__init(camera);
@@ -488,13 +513,15 @@ vmeta_frame_proto_get_camera_base_quat(Vmeta__CameraMetadata *camera)
 {
 	Vmeta__Quaternion *quat;
 
-	ULOG_ERRNO_RETURN_VAL_IF(!camera, EINVAL, NULL);
+	if(!camera) return NULL;
+
+	//ULOG_ERRNO_RETURN_VAL_IF(!camera, EINVAL, NULL);
 
 	if (camera->base_quat)
 		return camera->base_quat;
 	quat = calloc(1, sizeof(*quat));
 	if (!quat) {
-		ULOG_ERRNO("calloc", ENOMEM);
+		//ULOG_ERRNO("calloc", ENOMEM);
 		return NULL;
 	}
 	vmeta__quaternion__init(quat);
@@ -508,13 +535,15 @@ vmeta_frame_proto_get_camera_quat(Vmeta__CameraMetadata *camera)
 {
 	Vmeta__Quaternion *quat;
 
-	ULOG_ERRNO_RETURN_VAL_IF(!camera, EINVAL, NULL);
+	if(!camera) return NULL;
+
+	//ULOG_ERRNO_RETURN_VAL_IF(!camera, EINVAL, NULL);
 
 	if (camera->quat)
 		return camera->quat;
 	quat = calloc(1, sizeof(*quat));
 	if (!quat) {
-		ULOG_ERRNO("calloc", ENOMEM);
+		//ULOG_ERRNO("calloc", ENOMEM);
 		return NULL;
 	}
 	vmeta__quaternion__init(quat);
@@ -527,14 +556,16 @@ Vmeta__DroneMetadata *vmeta_frame_proto_get_drone(Vmeta__TimedMetadata *meta)
 {
 	Vmeta__DroneMetadata *drone;
 
-	ULOG_ERRNO_RETURN_VAL_IF(!meta, EINVAL, NULL);
+	if(!meta) return NULL;
+
+	//ULOG_ERRNO_RETURN_VAL_IF(!meta, EINVAL, NULL);
 
 	if (meta->drone)
 		return meta->drone;
 
 	drone = calloc(1, sizeof(*drone));
 	if (!drone) {
-		ULOG_ERRNO("calloc", ENOMEM);
+		//ULOG_ERRNO("calloc", ENOMEM);
 		return NULL;
 	}
 	vmeta__drone_metadata__init(drone);
@@ -548,13 +579,15 @@ vmeta_frame_proto_get_drone_location(Vmeta__DroneMetadata *drone)
 {
 	Vmeta__Location *location;
 
-	ULOG_ERRNO_RETURN_VAL_IF(!drone, EINVAL, NULL);
+	if(!drone) return NULL;
+
+	//ULOG_ERRNO_RETURN_VAL_IF(!drone, EINVAL, NULL);
 
 	if (drone->location)
 		return drone->location;
 	location = calloc(1, sizeof(*location));
 	if (!location) {
-		ULOG_ERRNO("calloc", ENOMEM);
+		//ULOG_ERRNO("calloc", ENOMEM);
 		return NULL;
 	}
 	vmeta__location__init(location);
@@ -567,13 +600,15 @@ Vmeta__Quaternion *vmeta_frame_proto_get_drone_quat(Vmeta__DroneMetadata *drone)
 {
 	Vmeta__Quaternion *quat;
 
-	ULOG_ERRNO_RETURN_VAL_IF(!drone, EINVAL, NULL);
+	if(!drone) return NULL;
+
+	//ULOG_ERRNO_RETURN_VAL_IF(!drone, EINVAL, NULL);
 
 	if (drone->quat)
 		return drone->quat;
 	quat = calloc(1, sizeof(*quat));
 	if (!quat) {
-		ULOG_ERRNO("calloc", ENOMEM);
+		//ULOG_ERRNO("calloc", ENOMEM);
 		return NULL;
 	}
 	vmeta__quaternion__init(quat);
@@ -586,13 +621,15 @@ Vmeta__NED *vmeta_frame_proto_get_drone_speed(Vmeta__DroneMetadata *drone)
 {
 	Vmeta__NED *speed;
 
-	ULOG_ERRNO_RETURN_VAL_IF(!drone, EINVAL, NULL);
+	if(!drone) return NULL;
+
+	//ULOG_ERRNO_RETURN_VAL_IF(!drone, EINVAL, NULL);
 
 	if (drone->speed)
 		return drone->speed;
 	speed = calloc(1, sizeof(*speed));
 	if (!speed) {
-		ULOG_ERRNO("calloc", ENOMEM);
+		//ULOG_ERRNO("calloc", ENOMEM);
 		return NULL;
 	}
 	vmeta__ned__init(speed);
@@ -605,13 +642,15 @@ Vmeta__NED *vmeta_frame_proto_get_drone_position(Vmeta__DroneMetadata *drone)
 {
 	Vmeta__NED *position;
 
-	ULOG_ERRNO_RETURN_VAL_IF(!drone, EINVAL, NULL);
+	if(!drone) return NULL;
+
+	//ULOG_ERRNO_RETURN_VAL_IF(!drone, EINVAL, NULL);
 
 	if (drone->position)
 		return drone->position;
 	position = calloc(1, sizeof(*position));
 	if (!position) {
-		ULOG_ERRNO("calloc", ENOMEM);
+		//ULOG_ERRNO("calloc", ENOMEM);
 		return NULL;
 	}
 	vmeta__ned__init(position);
@@ -625,13 +664,15 @@ vmeta_frame_proto_get_drone_local_position(Vmeta__DroneMetadata *drone)
 {
 	Vmeta__Vector3 *local_position;
 
-	ULOG_ERRNO_RETURN_VAL_IF(!drone, EINVAL, NULL);
+	if(!drone) return NULL;
+
+	//ULOG_ERRNO_RETURN_VAL_IF(!drone, EINVAL, NULL);
 
 	if (drone->local_position)
 		return drone->local_position;
 	local_position = calloc(1, sizeof(*local_position));
 	if (!local_position) {
-		ULOG_ERRNO("calloc", ENOMEM);
+		//ULOG_ERRNO("calloc", ENOMEM);
 		return NULL;
 	}
 	vmeta__vector3__init(local_position);
@@ -646,11 +687,13 @@ vmeta_frame_proto_add_wifi_link(Vmeta__TimedMetadata *meta)
 	Vmeta__LinkMetadata *link, **tmp;
 	Vmeta__WifiLinkMetadata *wifi;
 
-	ULOG_ERRNO_RETURN_VAL_IF(!meta, EINVAL, NULL);
+	if(!meta) return NULL;
+
+	//ULOG_ERRNO_RETURN_VAL_IF(!meta, EINVAL, NULL);
 
 	link = calloc(1, sizeof(*link));
 	if (!link) {
-		ULOG_ERRNO("calloc", ENOMEM);
+		//ULOG_ERRNO("calloc", ENOMEM);
 		return NULL;
 	}
 	vmeta__link_metadata__init(link);
@@ -658,7 +701,7 @@ vmeta_frame_proto_add_wifi_link(Vmeta__TimedMetadata *meta)
 
 	wifi = calloc(1, sizeof(*wifi));
 	if (!wifi) {
-		ULOG_ERRNO("calloc", ENOMEM);
+		//ULOG_ERRNO("calloc", ENOMEM);
 		vmeta__link_metadata__free_unpacked(link, NULL);
 		return NULL;
 	}
@@ -683,11 +726,13 @@ vmeta_frame_proto_add_starfish_link_info(Vmeta__StarfishLinkMetadata *starfish)
 {
 	Vmeta__StarfishLinkInfo *link, **tmp;
 
-	ULOG_ERRNO_RETURN_VAL_IF(!starfish, EINVAL, NULL);
+	if(!starfish) return NULL;
+
+	//ULOG_ERRNO_RETURN_VAL_IF(!starfish, EINVAL, NULL);
 
 	link = calloc(1, sizeof(*link));
 	if (!link) {
-		ULOG_ERRNO("calloc", ENOMEM);
+		//ULOG_ERRNO("calloc", ENOMEM);
 		return NULL;
 	}
 	vmeta__starfish_link_info__init(link);
@@ -711,11 +756,13 @@ vmeta_frame_proto_add_starfish_link(Vmeta__TimedMetadata *meta)
 	Vmeta__LinkMetadata *link, **tmp;
 	Vmeta__StarfishLinkMetadata *starfish;
 
-	ULOG_ERRNO_RETURN_VAL_IF(!meta, EINVAL, NULL);
+	if(!meta) return NULL;
+
+	//ULOG_ERRNO_RETURN_VAL_IF(!meta, EINVAL, NULL);
 
 	link = calloc(1, sizeof(*link));
 	if (!link) {
-		ULOG_ERRNO("calloc", ENOMEM);
+		//ULOG_ERRNO("calloc", ENOMEM);
 		return NULL;
 	}
 	vmeta__link_metadata__init(link);
@@ -723,7 +770,7 @@ vmeta_frame_proto_add_starfish_link(Vmeta__TimedMetadata *meta)
 
 	starfish = calloc(1, sizeof(*starfish));
 	if (!starfish) {
-		ULOG_ERRNO("calloc", ENOMEM);
+		//ULOG_ERRNO("calloc", ENOMEM);
 		vmeta__link_metadata__free_unpacked(link, NULL);
 		return NULL;
 	}
@@ -748,14 +795,16 @@ vmeta_frame_proto_get_tracking(Vmeta__TimedMetadata *meta)
 {
 	Vmeta__TrackingMetadata *tracking;
 
-	ULOG_ERRNO_RETURN_VAL_IF(!meta, EINVAL, NULL);
+	if(!meta) return NULL;
+
+	//ULOG_ERRNO_RETURN_VAL_IF(!meta, EINVAL, NULL);
 
 	if (meta->tracking)
 		return meta->tracking;
 
 	tracking = calloc(1, sizeof(*tracking));
 	if (!tracking) {
-		ULOG_ERRNO("calloc", ENOMEM);
+		//ULOG_ERRNO("calloc", ENOMEM);
 		return NULL;
 	}
 	vmeta__tracking_metadata__init(tracking);
@@ -769,13 +818,15 @@ vmeta_frame_proto_get_tracking_target(Vmeta__TrackingMetadata *tracking)
 {
 	Vmeta__BoundingBox *box;
 
-	ULOG_ERRNO_RETURN_VAL_IF(!tracking, EINVAL, NULL);
+	if(!tracking) return NULL;
+
+	//ULOG_ERRNO_RETURN_VAL_IF(!tracking, EINVAL, NULL);
 
 	if (tracking->target)
 		return tracking->target;
 	box = calloc(1, sizeof(*box));
 	if (!box) {
-		ULOG_ERRNO("calloc", ENOMEM);
+		//ULOG_ERRNO("calloc", ENOMEM);
 		return NULL;
 	}
 	vmeta__bounding_box__init(box);
@@ -789,14 +840,16 @@ vmeta_frame_proto_get_proposal(Vmeta__TimedMetadata *meta)
 {
 	Vmeta__TrackingProposalMetadata *proposal;
 
-	ULOG_ERRNO_RETURN_VAL_IF(!meta, EINVAL, NULL);
+	if(!meta) return NULL;
+
+	//ULOG_ERRNO_RETURN_VAL_IF(!meta, EINVAL, NULL);
 
 	if (meta->proposal)
 		return meta->proposal;
 
 	proposal = calloc(1, sizeof(*proposal));
 	if (!proposal) {
-		ULOG_ERRNO("calloc", ENOMEM);
+		//ULOG_ERRNO("calloc", ENOMEM);
 		return NULL;
 	}
 	vmeta__tracking_proposal_metadata__init(proposal);
@@ -810,11 +863,13 @@ vmeta_frame_proto_proposal_add_box(Vmeta__TrackingProposalMetadata *proposal)
 {
 	Vmeta__BoundingBox *box, **tmp;
 
-	ULOG_ERRNO_RETURN_VAL_IF(!proposal, EINVAL, NULL);
+	if(!proposal) return NULL;
+
+	//ULOG_ERRNO_RETURN_VAL_IF(!proposal, EINVAL, NULL);
 
 	box = calloc(1, sizeof(*box));
 	if (!box) {
-		ULOG_ERRNO("calloc", ENOMEM);
+		//ULOG_ERRNO("calloc", ENOMEM);
 		return NULL;
 	}
 	vmeta__bounding_box__init(box);
@@ -835,9 +890,12 @@ ssize_t vmeta_frame_proto_get_packed_size(struct vmeta_frame *meta)
 {
 	ssize_t ret;
 
-	ULOG_ERRNO_RETURN_ERR_IF(!meta, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(meta->type != VMETA_FRAME_TYPE_PROTO, EPROTO);
-	ULOG_ERRNO_RETURN_ERR_IF(!meta->proto, EINVAL);
+	if(!meta || !meta->proto) return -EINVAL;
+	if(meta->type != VMETA_FRAME_TYPE_PROTO) return -EPROTO;
+
+	//ULOG_ERRNO_RETURN_ERR_IF(!meta, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(meta->type != VMETA_FRAME_TYPE_PROTO, EPROTO);
+	//ULOG_ERRNO_RETURN_ERR_IF(!meta->proto, EINVAL);
 
 	pthread_mutex_lock(&meta->proto->lock);
 

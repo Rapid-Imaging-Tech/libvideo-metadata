@@ -42,8 +42,11 @@ int vmeta_frame_v2_write(struct vmeta_buffer *buf,
 	int32_t gps_altitude = 0;
 	int32_t gps_altitude_and_sv_count = 0;
 	uint8_t state = 0, mode = 0;
-	ULOG_ERRNO_RETURN_ERR_IF(buf == NULL, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
+
+	if(buf == NULL || meta == NULL) return -EINVAL;
+
+	//ULOG_ERRNO_RETURN_ERR_IF(buf == NULL, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
 	base = &meta->base;
 
 	/* Remember start position */
@@ -90,8 +93,8 @@ int vmeta_frame_v2_write(struct vmeta_buffer *buf,
 	/* Check for correct alignment */
 	if ((buf->pos - start) % 4 != 0) {
 		res = -EPROTO;
-		ULOGE("vmeta_frame_v2: buffer not aligned: %zu",
-		      buf->pos - start);
+		//ULOGE("vmeta_frame_v2: buffer not aligned: %zu",
+		      //buf->pos - start);
 		goto out;
 	}
 
@@ -104,8 +107,8 @@ int vmeta_frame_v2_write(struct vmeta_buffer *buf,
 	/* Check again for correct alignment */
 	if ((buf->pos - start) % 4 != 0) {
 		res = -EPROTO;
-		ULOGE("vmeta_frame_v2: buffer not aligned: %zu",
-		      buf->pos - start);
+		//ULOGE("vmeta_frame_v2: buffer not aligned: %zu",
+		      //buf->pos - start);
 		goto out;
 	}
 
@@ -132,8 +135,11 @@ int vmeta_frame_v2_read(struct vmeta_buffer *buf, struct vmeta_frame_v2 *meta)
 	int32_t gps_altitude_and_sv_count = 0;
 	uint8_t state = 0, mode = 0;
 	struct vmeta_frame_v2_base *base = NULL;
-	ULOG_ERRNO_RETURN_ERR_IF(buf == NULL, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
+
+	if(buf == NULL || meta == NULL) return -EINVAL;
+
+	//ULOG_ERRNO_RETURN_ERR_IF(buf == NULL, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
 
 	memset(meta, 0, sizeof(*meta));
 	memset(&location, 0, sizeof(location));
@@ -146,9 +152,9 @@ int vmeta_frame_v2_read(struct vmeta_buffer *buf, struct vmeta_frame_v2 *meta)
 	CHECK(vmeta_read_u16(buf, &id));
 	if (id != VMETA_FRAME_V2_BASE_ID) {
 		res = -EPROTO;
-		ULOGE("vmeta_frame_v2: bad id: 0x%04x (0x%04x)",
-		      id,
-		      VMETA_FRAME_V2_BASE_ID);
+		//ULOGE("vmeta_frame_v2: bad id: 0x%04x (0x%04x)",
+		      //id,
+		      //VMETA_FRAME_V2_BASE_ID);
 		goto out;
 	}
 
@@ -156,9 +162,9 @@ int vmeta_frame_v2_read(struct vmeta_buffer *buf, struct vmeta_frame_v2 *meta)
 	CHECK(vmeta_read_u16(buf, &len));
 	if (buf->len - start < (size_t)len * 4 + 4) {
 		res = -EPROTO;
-		ULOGE("vmeta_frame_v2: bad length: %zu (%u)",
-		      buf->len - start,
-		      len * 4 + 4);
+		//ULOGE("vmeta_frame_v2: bad length: %zu (%u)",
+		      //buf->len - start,
+		      //len * 4 + 4);
 		goto out;
 	}
 
@@ -208,9 +214,9 @@ int vmeta_frame_v2_read(struct vmeta_buffer *buf, struct vmeta_frame_v2 *meta)
 		buf->pos -= 4;
 		if (buf->len - buf->pos < (size_t)len * 4 + 4) {
 			res = -EPROTO;
-			ULOGE("vmeta_frame_v2: bad length: %zu (%u)",
-			      buf->len - buf->pos,
-			      len * 4 + 4);
+			//ULOGE("vmeta_frame_v2: bad length: %zu (%u)",
+			      //buf->len - buf->pos,
+			      //len * 4 + 4);
 			goto out;
 		}
 
@@ -232,8 +238,8 @@ int vmeta_frame_v2_read(struct vmeta_buffer *buf, struct vmeta_frame_v2 *meta)
 			break;
 
 		default:
-			ULOGW("vmeta_frame_v2: unknown extension id: 0x%04x",
-			      id);
+			//ULOGW("vmeta_frame_v2: unknown extension id: 0x%04x",
+			      //id);
 			break;
 		}
 
@@ -244,9 +250,9 @@ int vmeta_frame_v2_read(struct vmeta_buffer *buf, struct vmeta_frame_v2 *meta)
 	/* Make sure we read the correct number of bytes */
 	if (buf->pos - start != (size_t)len * 4 + 4) {
 		res = -EPROTO;
-		ULOGE("vmeta_frame_v2: bad length: %zu (%u)",
-		      buf->pos - start,
-		      len * 4 + 4);
+		//ULOGE("vmeta_frame_v2: bad length: %zu (%u)",
+		      //buf->pos - start,
+		      //len * 4 + 4);
 		goto out;
 	}
 
@@ -255,7 +261,7 @@ out:
 }
 
 
-int vmeta_frame_v2_to_json(const struct vmeta_frame_v2 *meta,
+/*int vmeta_frame_v2_to_json(const struct vmeta_frame_v2 *meta,
 			   struct json_object *jobj)
 {
 	vmeta_json_add_quaternion(jobj, "drone_quat", &meta->base.drone_quat);
@@ -423,3 +429,4 @@ size_t vmeta_frame_v2_csv_header(char *str, size_t maxlen)
 
 	return len;
 }
+*/

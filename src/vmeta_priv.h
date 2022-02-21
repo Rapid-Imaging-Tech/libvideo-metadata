@@ -29,7 +29,7 @@
 
 #include <errno.h>
 #include <inttypes.h>
-#include <json-c/json.h>
+//#include <json-c/json.h>
 #include <math.h>
 #include <pthread.h>
 #include <stdint.h>
@@ -44,14 +44,15 @@
 #endif /* !_WIN32 */
 
 
-#define ULOG_TAG vmeta
-#include <ulog.h>
+//#define ULOG_TAG vmeta
+//#include <ulog.h>
 
 #include "video-metadata/vmeta.h"
+#include "video-metadata/vmeta_frame_proto.h"
 
-#include "vmeta_csv.h"
-#include "vmeta_json.h"
-#include "vmeta_json_proto.h"
+//#include "vmeta_csv.h"
+//#include "vmeta_json.h"
+//#include "vmeta_json_proto.h"
 
 
 #define VMETA_STR_PRINT(_str, _len, _max, _fmt, ...)                           \
@@ -95,11 +96,13 @@ static inline void vmeta_location_adjust_write(const struct vmeta_location *in,
 
 static inline int vmeta_buffer_read(struct vmeta_buffer *buf, void *p, size_t n)
 {
-	ULOG_ERRNO_RETURN_ERR_IF(buf == NULL, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(p == NULL, EINVAL);
+	if(buf == NULL || p == NULL) return -EINVAL;
+	//ULOG_ERRNO_RETURN_ERR_IF(buf == NULL, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(p == NULL, EINVAL);
 
 	/* Make sure there is enough room in data buffer */
-	ULOG_ERRNO_RETURN_ERR_IF(buf->pos + n > buf->len, ENOBUFS);
+	if(buf->pos + n > buf->len) return -ENOBUFS;
+	//ULOG_ERRNO_RETURN_ERR_IF(buf->pos + n > buf->len, ENOBUFS);
 
 	/* Copy data */
 	memcpy(p, buf->cdata + buf->pos, n);
@@ -111,11 +114,13 @@ static inline int vmeta_buffer_read(struct vmeta_buffer *buf, void *p, size_t n)
 static inline int
 vmeta_buffer_write(struct vmeta_buffer *buf, const void *p, size_t n)
 {
-	ULOG_ERRNO_RETURN_ERR_IF(buf == NULL, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(p == NULL, EINVAL);
+	if(buf == NULL || p == NULL) return -EINVAL;
+	//ULOG_ERRNO_RETURN_ERR_IF(buf == NULL, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(p == NULL, EINVAL);
 
 	/* Make sure there is enough room in data buffer */
-	ULOG_ERRNO_RETURN_ERR_IF(buf->pos + n > buf->len, ENOBUFS);
+	if(buf->pos + n > buf->len) return -ENOBUFS;
+	//ULOG_ERRNO_RETURN_ERR_IF(buf->pos + n > buf->len, ENOBUFS);
 
 	/* Copy data, adjust used length */
 	memcpy(buf->data + buf->pos, p, n);
@@ -392,10 +397,10 @@ int vmeta_frame_proto_to_json(struct vmeta_frame *meta,
 int vmeta_frame_proto_destroy(struct vmeta_frame_proto *meta);
 
 
-const char *vmeta_link_type_to_str(Vmeta__LinkType val);
+//const char *vmeta_link_type_to_str(Vmeta__LinkType val);
 
 
-const char *vmeta_link_status_to_str(Vmeta__LinkStatus val);
+//const char *vmeta_link_status_to_str(Vmeta__LinkStatus val);
 
 
 #endif /* !_VMETA_PRIV_H_ */

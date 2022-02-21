@@ -27,7 +27,8 @@
 #ifndef _VMETA_FRAME_PROTO_H_
 #define _VMETA_FRAME_PROTO_H_
 
-#include <vmeta.pb-c.h>
+#include "vmeta.pb-c.h"
+#include "vmeta.h"
 
 /* "Parrot Video Metadata" protobuf-based MIME type */
 #define VMETA_FRAME_PROTO_MIME_TYPE                                            \

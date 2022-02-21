@@ -38,8 +38,11 @@ int vmeta_frame_v1_streaming_basic_write(
 	int res = 0;
 	size_t start = 0, end = 0;
 	uint16_t len = 0;
-	ULOG_ERRNO_RETURN_ERR_IF(buf == NULL, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
+
+	if(buf == NULL || meta == NULL) return -EINVAL;
+
+	//ULOG_ERRNO_RETURN_ERR_IF(buf == NULL, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
 
 	/* Remember start position */
 	start = buf->pos;
@@ -64,17 +67,17 @@ int vmeta_frame_v1_streaming_basic_write(
 	/* Check expected size */
 	if (buf->pos - start != VMETA_FRAME_V1_STREAMING_BASIC_SIZE) {
 		res = -EPROTO;
-		ULOGW("vmeta_frame_v1: bad length: %zu (%u)",
-		      buf->pos - start,
-		      VMETA_FRAME_V1_STREAMING_BASIC_SIZE);
+		//ULOGW("vmeta_frame_v1: bad length: %zu (%u)",
+		      //buf->pos - start,
+		      //VMETA_FRAME_V1_STREAMING_BASIC_SIZE);
 		goto out;
 	}
 
 	/* Check for correct alignment */
 	if ((buf->pos - start) % 4 != 0) {
 		res = -EPROTO;
-		ULOGE("vmeta_frame_v1: buffer not aligned: %zu",
-		      buf->pos - start);
+		//ULOGE("vmeta_frame_v1: buffer not aligned: %zu",
+		      //buf->pos - start);
 		goto out;
 	}
 
@@ -98,8 +101,11 @@ int vmeta_frame_v1_streaming_basic_read(
 	int res = 0;
 	size_t start = 0;
 	uint16_t id = 0, len = 0;
-	ULOG_ERRNO_RETURN_ERR_IF(buf == NULL, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
+
+	if(buf == NULL || meta == NULL) return -EINVAL;
+
+	//ULOG_ERRNO_RETURN_ERR_IF(buf == NULL, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
 
 	/* Get buffer start */
 	start = buf->pos;
@@ -108,9 +114,9 @@ int vmeta_frame_v1_streaming_basic_read(
 	CHECK(vmeta_read_u16(buf, &id));
 	if (id != VMETA_FRAME_V1_STREAMING_ID) {
 		res = -EPROTO;
-		ULOGE("vmeta_frame_v1: bad id: 0x%04x (0x%04x)",
-		      id,
-		      VMETA_FRAME_V1_STREAMING_ID);
+		//ULOGE("vmeta_frame_v1: bad id: 0x%04x (0x%04x)",
+		      //id,
+		      //VMETA_FRAME_V1_STREAMING_ID);
 		goto out;
 	}
 
@@ -118,9 +124,9 @@ int vmeta_frame_v1_streaming_basic_read(
 	CHECK(vmeta_read_u16(buf, &len));
 	if (buf->len - start < (size_t)len * 4 + 4) {
 		res = -EPROTO;
-		ULOGE("vmeta_frame_v1: bad length: %zu (%u)",
-		      buf->len - start,
-		      len * 4 + 4);
+		//ULOGE("vmeta_frame_v1: bad length: %zu (%u)",
+		      //buf->len - start,
+		      //len * 4 + 4);
 		goto out;
 	}
 
@@ -143,9 +149,9 @@ int vmeta_frame_v1_streaming_basic_read(
 	/* Make sure we read the correct number of bytes */
 	if (buf->pos - start != (size_t)len * 4 + 4) {
 		res = -EPROTO;
-		ULOGE("vmeta_frame_v1: bad length: %zu (%u)",
-		      buf->pos - start,
-		      len * 4 + 4);
+		//ULOGE("vmeta_frame_v1: bad length: %zu (%u)",
+		      //buf->pos - start,
+		      //len * 4 + 4);
 		goto out;
 	}
 
@@ -154,7 +160,7 @@ out:
 }
 
 
-int vmeta_frame_v1_streaming_basic_to_json(
+/*int vmeta_frame_v1_streaming_basic_to_json(
 	const struct vmeta_frame_v1_streaming_basic *meta,
 	struct json_object *jobj)
 {
@@ -222,6 +228,7 @@ size_t vmeta_frame_v1_streaming_basic_csv_header(char *str, size_t maxlen)
 {
 	return vmeta_frame_v1_streaming_extended_csv_header(str, maxlen);
 }
+ */
 
 
 int vmeta_frame_v1_streaming_extended_write(
@@ -235,8 +242,11 @@ int vmeta_frame_v1_streaming_extended_write(
 	int32_t gps_altitude = 0;
 	int32_t gps_altitude_and_sv_count = 0;
 	uint8_t state = 0, mode = 0;
-	ULOG_ERRNO_RETURN_ERR_IF(buf == NULL, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
+
+	if(buf == NULL || meta == NULL) return -EINVAL;
+
+	//ULOG_ERRNO_RETURN_ERR_IF(buf == NULL, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
 
 	/* Remember start position */
 	start = buf->pos;
@@ -281,17 +291,17 @@ int vmeta_frame_v1_streaming_extended_write(
 	/* Check expected size */
 	if (buf->pos - start != VMETA_FRAME_V1_STREAMING_EXTENDED_SIZE) {
 		res = -EPROTO;
-		ULOGW("vmeta_frame_v1: bad length: %zu (%u)",
-		      buf->pos - start,
-		      VMETA_FRAME_V1_STREAMING_EXTENDED_SIZE);
+		//ULOGW("vmeta_frame_v1: bad length: %zu (%u)",
+		      //buf->pos - start,
+		      //VMETA_FRAME_V1_STREAMING_EXTENDED_SIZE);
 		goto out;
 	}
 
 	/* Check for correct alignment */
 	if ((buf->pos - start) % 4 != 0) {
 		res = -EPROTO;
-		ULOGE("vmeta_frame_v1: buffer not aligned: %zu",
-		      buf->pos - start);
+		//ULOGE("vmeta_frame_v1: buffer not aligned: %zu",
+		      //buf->pos - start);
 		goto out;
 	}
 
@@ -319,8 +329,11 @@ int vmeta_frame_v1_streaming_extended_read(
 	int32_t gps_altitude = 0;
 	int32_t gps_altitude_and_sv_count = 0;
 	uint8_t state = 0, mode = 0;
-	ULOG_ERRNO_RETURN_ERR_IF(buf == NULL, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
+
+	if(buf == NULL || meta == NULL) return -EINVAL;
+
+	//ULOG_ERRNO_RETURN_ERR_IF(buf == NULL, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
 
 	/* Get buffer start */
 	start = buf->pos;
@@ -329,9 +342,9 @@ int vmeta_frame_v1_streaming_extended_read(
 	CHECK(vmeta_read_u16(buf, &id));
 	if (id != VMETA_FRAME_V1_STREAMING_ID) {
 		res = -EPROTO;
-		ULOGE("vmeta_frame_v1: bad id: 0x%04x (0x%04x)",
-		      id,
-		      VMETA_FRAME_V1_STREAMING_ID);
+		//ULOGE("vmeta_frame_v1: bad id: 0x%04x (0x%04x)",
+		      //id,
+		      //VMETA_FRAME_V1_STREAMING_ID);
 		goto out;
 	}
 
@@ -339,9 +352,9 @@ int vmeta_frame_v1_streaming_extended_read(
 	CHECK(vmeta_read_u16(buf, &len));
 	if (buf->len - start < (size_t)len * 4 + 4) {
 		res = -EPROTO;
-		ULOGE("vmeta_frame_v1: bad length: %zu (%u)",
-		      buf->len - start,
-		      len * 4 + 4);
+		//ULOGE("vmeta_frame_v1: bad length: %zu (%u)",
+		      //buf->len - start,
+		      //len * 4 + 4);
 		goto out;
 	}
 
@@ -387,9 +400,9 @@ int vmeta_frame_v1_streaming_extended_read(
 	/* Make sure we read the correct number of bytes */
 	if (buf->pos - start != (size_t)len * 4 + 4) {
 		res = -EPROTO;
-		ULOGE("vmeta_frame_v1: bad length: %zu (%u)",
-		      buf->pos - start,
-		      len * 4 + 4);
+		//ULOGE("vmeta_frame_v1: bad length: %zu (%u)",
+		      //buf->pos - start,
+		      //len * 4 + 4);
 		goto out;
 	}
 
@@ -398,7 +411,7 @@ out:
 }
 
 
-int vmeta_frame_v1_streaming_extended_to_json(
+/*int vmeta_frame_v1_streaming_extended_to_json(
 	const struct vmeta_frame_v1_streaming_extended *meta,
 	struct json_object *jobj)
 {
@@ -500,6 +513,7 @@ size_t vmeta_frame_v1_streaming_extended_csv_header(char *str, size_t maxlen)
 
 	return len;
 }
+ */
 
 
 int vmeta_frame_v1_recording_write(struct vmeta_buffer *buf,
@@ -510,8 +524,11 @@ int vmeta_frame_v1_recording_write(struct vmeta_buffer *buf,
 	int32_t gps_altitude = 0;
 	int32_t gps_altitude_and_sv_count = 0;
 	uint8_t state = 0, mode = 0;
-	ULOG_ERRNO_RETURN_ERR_IF(buf == NULL, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
+
+	if(buf == NULL || meta == NULL) return -EINVAL;
+
+	//ULOG_ERRNO_RETURN_ERR_IF(buf == NULL, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
 
 	/* Adjust location if needed */
 	vmeta_location_adjust_write(&meta->location, &location);
@@ -562,8 +579,11 @@ int vmeta_frame_v1_recording_read(struct vmeta_buffer *buf,
 	int32_t gps_altitude = 0;
 	int32_t gps_altitude_and_sv_count = 0;
 	uint8_t state = 0, mode = 0;
-	ULOG_ERRNO_RETURN_ERR_IF(buf == NULL, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
+
+	if(buf == NULL || meta == NULL) return -EINVAL;
+
+	//ULOG_ERRNO_RETURN_ERR_IF(buf == NULL, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
 
 	/* Read fields */
 	memset(meta, 0, sizeof(*meta));
@@ -610,7 +630,7 @@ out:
 }
 
 
-int vmeta_frame_v1_recording_to_json(
+/*int vmeta_frame_v1_recording_to_json(
 	const struct vmeta_frame_v1_recording *meta,
 	struct json_object *jobj)
 {
@@ -718,3 +738,4 @@ size_t vmeta_frame_v1_recording_csv_header(char *str, size_t maxlen)
 
 	return len;
 }
+*/

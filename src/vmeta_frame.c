@@ -178,8 +178,11 @@ const char *vmeta_frame_type_str(enum vmeta_frame_type val)
 int vmeta_frame_write(struct vmeta_buffer *buf, struct vmeta_frame *meta)
 {
 	int res = 0;
-	ULOG_ERRNO_RETURN_ERR_IF(buf == NULL, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
+
+	if(meta == NULL || buf == NULL) return -EINVAL;
+
+	//ULOG_ERRNO_RETURN_ERR_IF(buf == NULL, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
 
 	switch (meta->type) {
 	case VMETA_FRAME_TYPE_NONE:
@@ -213,7 +216,7 @@ int vmeta_frame_write(struct vmeta_buffer *buf, struct vmeta_frame *meta)
 		break;
 
 	default:
-		ULOGW("unknown metadata type: %u", meta->type);
+		//ULOGW("unknown metadata type: %u", meta->type);
 		res = -ENOSYS;
 		break;
 	}
@@ -231,8 +234,10 @@ int vmeta_frame_read(struct vmeta_buffer *buf,
 	uint16_t id = 0;
 	struct vmeta_frame *meta = NULL;
 
-	ULOG_ERRNO_RETURN_ERR_IF(buf == NULL, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(ret_obj == NULL, EINVAL);
+	if(buf == NULL || ret_obj == NULL) return -EINVAL;
+
+	//ULOG_ERRNO_RETURN_ERR_IF(buf == NULL, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(ret_obj == NULL, EINVAL);
 
 	meta = calloc(1, sizeof(*meta));
 	if (!meta) {
@@ -261,7 +266,7 @@ int vmeta_frame_read(struct vmeta_buffer *buf,
 			   0) {
 			meta->type = VMETA_FRAME_TYPE_PROTO;
 		} else {
-			ULOGW("unknown metadata MIME type: '%s'", mime_type);
+			//ULOGW("unknown metadata MIME type: '%s'", mime_type);
 			res = -ENOSYS;
 			goto out;
 		}
@@ -284,8 +289,7 @@ int vmeta_frame_read(struct vmeta_buffer *buf,
 				meta->type =
 					VMETA_FRAME_TYPE_V1_STREAMING_BASIC;
 			} else {
-				ULOGW("bad metadata streaming v1 length: %zu",
-				      len);
+				//ULOGW("bad metadata streaming v1 length: %zu",len);
 				res = -EPROTO;
 				goto out;
 			}
@@ -300,7 +304,7 @@ int vmeta_frame_read(struct vmeta_buffer *buf,
 			break;
 
 		default:
-			ULOGW("unknown metadata id: 0x%04x", id);
+			//ULOGW("unknown metadata id: 0x%04x", id);
 			res = -EPROTO;
 			goto out;
 		}
@@ -339,7 +343,7 @@ int vmeta_frame_read(struct vmeta_buffer *buf,
 		break;
 
 	default:
-		ULOGW("unknown metadata type: %u", meta->type);
+		//ULOGW("unknown metadata type: %u", meta->type);
 		res = -ENOSYS;
 		break;
 	}
@@ -358,7 +362,9 @@ int vmeta_frame_new(enum vmeta_frame_type type, struct vmeta_frame **ret_obj)
 {
 	int res;
 
-	ULOG_ERRNO_RETURN_ERR_IF(ret_obj == NULL, EINVAL);
+	if(ret_obj == NULL) return -EINVAL;
+
+	//ULOG_ERRNO_RETURN_ERR_IF(ret_obj == NULL, EINVAL);
 
 	struct vmeta_frame *meta = calloc(1, sizeof(*meta));
 	if (!meta) {
@@ -389,7 +395,7 @@ int vmeta_frame_new(enum vmeta_frame_type type, struct vmeta_frame **ret_obj)
 		break;
 
 	default:
-		ULOGW("unknown metadata streaming type: %u", meta->type);
+		//ULOGW("unknown metadata streaming type: %u", meta->type);
 		res = -ENOSYS;
 		break;
 	}
@@ -406,7 +412,8 @@ out:
 
 int vmeta_frame_ref(struct vmeta_frame *meta)
 {
-	ULOG_ERRNO_RETURN_ERR_IF(!meta, EINVAL);
+	if(meta == NULL) return -EINVAL;
+	//ULOG_ERRNO_RETURN_ERR_IF(!meta, EINVAL);
 
 #if defined(__GNUC__)
 	__atomic_add_fetch(&meta->ref_count, 1, __ATOMIC_SEQ_CST);
@@ -422,7 +429,9 @@ int vmeta_frame_unref(struct vmeta_frame *meta)
 {
 	unsigned int ref;
 	int res = 0;
-	ULOG_ERRNO_RETURN_ERR_IF(!meta, EINVAL);
+
+	if(meta == NULL) return -EINVAL;
+	//ULOG_ERRNO_RETURN_ERR_IF(!meta, EINVAL);
 
 #if defined(__GNUC__)
 	/* Yes, this can be racy, but calling unref on an already
@@ -457,7 +466,7 @@ int vmeta_frame_unref(struct vmeta_frame *meta)
 	default:
 		/* Just log and return 0 properly since we will free the
 		 * metadata anyway */
-		ULOGW("unknown metadata streaming type: %u", meta->type);
+		//ULOGW("unknown metadata streaming type: %u", meta->type);
 		break;
 	}
 
@@ -470,7 +479,8 @@ out:
 int vmeta_frame_get_ref_count(struct vmeta_frame *meta)
 {
 	unsigned int ref;
-	ULOG_ERRNO_RETURN_ERR_IF(!meta, EINVAL);
+	if(meta == NULL) return -EINVAL;
+	//ULOG_ERRNO_RETURN_ERR_IF(!meta, EINVAL);
 
 #if defined(__GNUC__)
 	ref = __atomic_load_n(&meta->ref_count, __ATOMIC_ACQUIRE);
@@ -483,15 +493,18 @@ int vmeta_frame_get_ref_count(struct vmeta_frame *meta)
 }
 
 
-int vmeta_frame_to_json(struct vmeta_frame *meta, struct json_object *jobj)
+/*int vmeta_frame_to_json(struct vmeta_frame *meta, struct json_object *jobj)
 {
 	int res = 0;
-	ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(jobj == NULL, EINVAL);
+
+	if(meta == NULL || jobj == NULL) return -EINVAL;
+
+	//ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(jobj == NULL, EINVAL);
 
 	switch (meta->type) {
 	case VMETA_FRAME_TYPE_NONE:
-		/* Nothing to do */
+		// Nothing to do
 		break;
 
 	case VMETA_FRAME_TYPE_V1_RECORDING:
@@ -521,21 +534,24 @@ int vmeta_frame_to_json(struct vmeta_frame *meta, struct json_object *jobj)
 		break;
 
 	default:
-		ULOGW("unknown metadata type: %u", meta->type);
+		//ULOGW("unknown metadata type: %u", meta->type);
 		res = -ENOSYS;
 		break;
 	}
 
 	return res;
-}
+}*/
 
 
-int vmeta_frame_to_json_str(struct vmeta_frame *meta,
+/*int vmeta_frame_to_json_str(struct vmeta_frame *meta,
 			    char *output,
 			    unsigned int len)
 {
-	ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(output == NULL, EINVAL);
+
+	if(meta == NULL || output == NULL) return -EINVAL;
+
+	//ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(output == NULL, EINVAL);
 
 	const char *jstr;
 	struct json_object *jobj = json_object_new_object();
@@ -555,19 +571,22 @@ int vmeta_frame_to_json_str(struct vmeta_frame *meta,
 out:
 	json_object_put(jobj);
 	return ret;
-}
+}*/
 
 
-ssize_t
+/*ssize_t
 vmeta_frame_to_csv(const struct vmeta_frame *meta, char *str, size_t maxlen)
 {
 	size_t len = 0;
-	ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(str == NULL, EINVAL);
+
+	if(meta == NULL || str == NULL) return -EINVAL;
+
+	//ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(str == NULL, EINVAL);
 
 	switch (meta->type) {
 	case VMETA_FRAME_TYPE_NONE:
-		/* Nothing to do */
+		// Nothing to do
 		break;
 
 	case VMETA_FRAME_TYPE_V1_RECORDING:
@@ -598,23 +617,25 @@ vmeta_frame_to_csv(const struct vmeta_frame *meta, char *str, size_t maxlen)
 		break;
 
 	default:
-		ULOGW("unknown metadata type: %u", meta->type);
+		//ULOGW("unknown metadata type: %u", meta->type);
 		return -ENOSYS;
 	}
 
 	return (ssize_t)len;
-}
+}*/
 
 
-ssize_t
+/*ssize_t
 vmeta_frame_csv_header(enum vmeta_frame_type type, char *str, size_t maxlen)
 {
 	size_t len = 0;
-	ULOG_ERRNO_RETURN_ERR_IF(str == NULL, EINVAL);
+
+	if(str == NULL) return -EINVAL;
+	//ULOG_ERRNO_RETURN_ERR_IF(str == NULL, EINVAL);
 
 	switch (type) {
 	case VMETA_FRAME_TYPE_NONE:
-		/* Nothing to do */
+		// Nothing to do
 		break;
 
 	case VMETA_FRAME_TYPE_V1_RECORDING:
@@ -642,12 +663,12 @@ vmeta_frame_csv_header(enum vmeta_frame_type type, char *str, size_t maxlen)
 		break;
 
 	default:
-		ULOGW("unknown metadata type: %u", type);
+		//ULOGW("unknown metadata type: %u", type);
 		return -ENOSYS;
 	}
 
 	return (ssize_t)len;
-}
+}*/
 
 
 const char *vmeta_frame_get_mime_type(enum vmeta_frame_type type)
@@ -666,7 +687,7 @@ const char *vmeta_frame_get_mime_type(enum vmeta_frame_type type)
 	case VMETA_FRAME_TYPE_PROTO:
 		return VMETA_FRAME_PROTO_MIME_TYPE;
 	default:
-		ULOGW("unknown metadata type: %u", type);
+		//ULOGW("unknown metadata type: %u", type);
 		return NULL;
 	}
 }
@@ -679,8 +700,11 @@ int vmeta_frame_ext_timestamp_write(
 	int res = 0;
 	size_t start = 0, end = 0;
 	uint16_t len = 0;
-	ULOG_ERRNO_RETURN_ERR_IF(buf == NULL, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
+
+	if(buf == NULL || meta == NULL) return -EINVAL;
+
+	//ULOG_ERRNO_RETURN_ERR_IF(buf == NULL, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
 
 	/* Remember start position */
 	start = buf->pos;
@@ -693,8 +717,7 @@ int vmeta_frame_ext_timestamp_write(
 	/* Check for correct alignment */
 	if ((buf->pos - start) % 4 != 0) {
 		res = -EPROTO;
-		ULOGE("vmeta_frame_ext: buffer not aligned: %zu",
-		      buf->pos - start);
+		//ULOGE("vmeta_frame_ext: buffer not aligned: %zu",buf->pos - start);
 		goto out;
 	}
 
@@ -717,8 +740,11 @@ int vmeta_frame_ext_timestamp_read(struct vmeta_buffer *buf,
 	int res = 0;
 	size_t start = 0;
 	uint16_t id = 0, len = 0;
-	ULOG_ERRNO_RETURN_ERR_IF(buf == NULL, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
+
+	if(meta == NULL || buf == NULL) return -EINVAL;
+
+	//ULOG_ERRNO_RETURN_ERR_IF(buf == NULL, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
 
 	/* Get buffer start */
 	start = buf->pos;
@@ -727,9 +753,9 @@ int vmeta_frame_ext_timestamp_read(struct vmeta_buffer *buf,
 	CHECK(vmeta_read_u16(buf, &id));
 	if (id != VMETA_FRAME_EXT_TIMESTAMP_ID) {
 		res = -EPROTO;
-		ULOGE("vmeta_frame_ext: bad id: 0x%04x (0x%04x)",
-		      id,
-		      VMETA_FRAME_EXT_TIMESTAMP_ID);
+		//ULOGE("vmeta_frame_ext: bad id: 0x%04x (0x%04x)",
+		      //id,
+		      //VMETA_FRAME_EXT_TIMESTAMP_ID);
 		goto out;
 	}
 
@@ -737,9 +763,9 @@ int vmeta_frame_ext_timestamp_read(struct vmeta_buffer *buf,
 	CHECK(vmeta_read_u16(buf, &len));
 	if (buf->len - start < (size_t)len * 4 + 4) {
 		res = -EPROTO;
-		ULOGE("vmeta_frame_ext: bad length: %zu (%u)",
-		      buf->len - start,
-		      len * 4 + 4);
+		//ULOGE("vmeta_frame_ext: bad length: %zu (%u)",
+		      //buf->len - start,
+		      //len * 4 + 4);
 		goto out;
 	}
 
@@ -750,9 +776,9 @@ int vmeta_frame_ext_timestamp_read(struct vmeta_buffer *buf,
 	/* Make sure we read the correct number of bytes */
 	if (buf->pos - start != (size_t)len * 4 + 4) {
 		res = -EPROTO;
-		ULOGE("vmeta_frame_ext: bad length: %zu (%u)",
-		      buf->pos - start,
-		      len * 4 + 4);
+		//ULOGE("vmeta_frame_ext: bad length: %zu (%u)",
+		      //buf->pos - start,
+		      //len * 4 + 4);
 		goto out;
 	}
 
@@ -771,8 +797,11 @@ int vmeta_frame_ext_followme_write(struct vmeta_buffer *buf,
 	uint8_t mode = 0, anim = 0;
 	uint8_t reserved1 = 0, reserved2 = 0;
 	uint32_t reserved3 = 0, reserved4 = 0;
-	ULOG_ERRNO_RETURN_ERR_IF(buf == NULL, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
+
+	if(meta == NULL || buf == NULL) return -EINVAL;
+
+	//ULOG_ERRNO_RETURN_ERR_IF(buf == NULL, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
 
 	/* Remember start position */
 	start = buf->pos;
@@ -799,8 +828,8 @@ int vmeta_frame_ext_followme_write(struct vmeta_buffer *buf,
 	/* Check for correct alignment */
 	if ((buf->pos - start) % 4 != 0) {
 		res = -EPROTO;
-		ULOGE("vmeta_frame_ext: buffer not aligned: %zu",
-		      buf->pos - start);
+		//ULOGE("vmeta_frame_ext: buffer not aligned: %zu",
+		      //buf->pos - start);
 		goto out;
 	}
 
@@ -827,8 +856,11 @@ int vmeta_frame_ext_followme_read(struct vmeta_buffer *buf,
 	uint8_t mode = 0, anim = 0;
 	uint8_t reserved1 = 0, reserved2 = 0;
 	uint32_t reserved3 = 0, reserved4 = 0;
-	ULOG_ERRNO_RETURN_ERR_IF(buf == NULL, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
+
+	if(meta == NULL || buf == NULL) return -EINVAL;
+
+	//ULOG_ERRNO_RETURN_ERR_IF(buf == NULL, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
 
 	/* Get buffer start */
 	start = buf->pos;
@@ -837,9 +869,9 @@ int vmeta_frame_ext_followme_read(struct vmeta_buffer *buf,
 	CHECK(vmeta_read_u16(buf, &id));
 	if (id != VMETA_FRAME_EXT_FOLLOWME_ID) {
 		res = -EPROTO;
-		ULOGE("vmeta_frame_ext: bad id: 0x%04x (0x%04x)",
-		      id,
-		      VMETA_FRAME_EXT_FOLLOWME_ID);
+		//ULOGE("vmeta_frame_ext: bad id: 0x%04x (0x%04x)",
+		      //id,
+		      //VMETA_FRAME_EXT_FOLLOWME_ID);
 		goto out;
 	}
 
@@ -847,9 +879,9 @@ int vmeta_frame_ext_followme_read(struct vmeta_buffer *buf,
 	CHECK(vmeta_read_u16(buf, &len));
 	if (buf->len - start < (size_t)len * 4 + 4) {
 		res = -EPROTO;
-		ULOGE("vmeta_frame_ext: bad length: %zu (%u)",
-		      buf->len - start,
-		      len * 4 + 4);
+		//ULOGE("vmeta_frame_ext: bad length: %zu (%u)",
+		      //buf->len - start,
+		      //len * 4 + 4);
 		goto out;
 	}
 
@@ -877,9 +909,9 @@ int vmeta_frame_ext_followme_read(struct vmeta_buffer *buf,
 	/* Make sure we read the correct number of bytes */
 	if (buf->pos - start != (size_t)len * 4 + 4) {
 		res = -EPROTO;
-		ULOGE("vmeta_frame_ext: bad length: %zu (%u)",
-		      buf->pos - start,
-		      len * 4 + 4);
+		//ULOGE("vmeta_frame_ext: bad length: %zu (%u)",
+		      //buf->pos - start,
+		      //len * 4 + 4);
 		goto out;
 	}
 
@@ -898,8 +930,11 @@ int vmeta_frame_ext_automation_write(
 	struct vmeta_location framing_target, flight_destination;
 	uint8_t flags = 0, anim = 0;
 	uint16_t reserved = 0;
-	ULOG_ERRNO_RETURN_ERR_IF(buf == NULL, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
+
+	if(meta == NULL || buf == NULL) return -EINVAL;
+
+	//ULOG_ERRNO_RETURN_ERR_IF(buf == NULL, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
 
 	/* Remember start position */
 	start = buf->pos;
@@ -929,8 +964,8 @@ int vmeta_frame_ext_automation_write(
 	/* Check for correct alignment */
 	if ((buf->pos - start) % 4 != 0) {
 		res = -EPROTO;
-		ULOGE("vmeta_frame_ext: buffer not aligned: %zu",
-		      buf->pos - start);
+		//ULOGE("vmeta_frame_ext: buffer not aligned: %zu",
+		      //buf->pos - start);
 		goto out;
 	}
 
@@ -956,8 +991,11 @@ int vmeta_frame_ext_automation_read(struct vmeta_buffer *buf,
 	struct vmeta_location framing_target, flight_destination;
 	uint8_t flags = 0, anim = 0;
 	uint16_t reserved = 0;
-	ULOG_ERRNO_RETURN_ERR_IF(buf == NULL, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
+
+	if(meta == NULL || buf == NULL) return -EINVAL;
+
+	//ULOG_ERRNO_RETURN_ERR_IF(buf == NULL, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
 
 	/* Get buffer start */
 	start = buf->pos;
@@ -966,9 +1004,9 @@ int vmeta_frame_ext_automation_read(struct vmeta_buffer *buf,
 	CHECK(vmeta_read_u16(buf, &id));
 	if (id != VMETA_FRAME_EXT_AUTOMATION_ID) {
 		res = -EPROTO;
-		ULOGE("vmeta_frame_ext: bad id: 0x%04x (0x%04x)",
-		      id,
-		      VMETA_FRAME_EXT_AUTOMATION_ID);
+		//ULOGE("vmeta_frame_ext: bad id: 0x%04x (0x%04x)",
+		      //id,
+		      //VMETA_FRAME_EXT_AUTOMATION_ID);
 		goto out;
 	}
 
@@ -976,9 +1014,9 @@ int vmeta_frame_ext_automation_read(struct vmeta_buffer *buf,
 	CHECK(vmeta_read_u16(buf, &len));
 	if (buf->len - start < (size_t)len * 4 + 4) {
 		res = -EPROTO;
-		ULOGE("vmeta_frame_ext: bad length: %zu (%u)",
-		      buf->len - start,
-		      len * 4 + 4);
+		//ULOGE("vmeta_frame_ext: bad length: %zu (%u)",
+		      //buf->len - start,
+		      //len * 4 + 4);
 		goto out;
 	}
 
@@ -1010,9 +1048,9 @@ int vmeta_frame_ext_automation_read(struct vmeta_buffer *buf,
 	/* Make sure we read the correct number of bytes */
 	if (buf->pos - start != (size_t)len * 4 + 4) {
 		res = -EPROTO;
-		ULOGE("vmeta_frame_ext: bad length: %zu (%u)",
-		      buf->pos - start,
-		      len * 4 + 4);
+		//ULOGE("vmeta_frame_ext: bad length: %zu (%u)",
+		      //buf->pos - start,
+		      //len * 4 + 4);
 		goto out;
 	}
 
@@ -1028,8 +1066,11 @@ int vmeta_frame_ext_thermal_write(struct vmeta_buffer *buf,
 	size_t start = 0, end = 0;
 	uint16_t len = 0;
 	uint8_t flags = 0;
-	ULOG_ERRNO_RETURN_ERR_IF(buf == NULL, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
+
+	if(meta == NULL || buf == NULL) return -EINVAL;
+
+	//ULOG_ERRNO_RETURN_ERR_IF(buf == NULL, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
 
 	/* Remember start position */
 	start = buf->pos;
@@ -1055,8 +1096,8 @@ int vmeta_frame_ext_thermal_write(struct vmeta_buffer *buf,
 	/* Check for correct alignment */
 	if ((buf->pos - start) % 4 != 0) {
 		res = -EPROTO;
-		ULOGE("vmeta_frame_ext: buffer not aligned: %zu",
-		      buf->pos - start);
+		//ULOGE("vmeta_frame_ext: buffer not aligned: %zu",
+		      //buf->pos - start);
 		goto out;
 	}
 
@@ -1080,8 +1121,11 @@ int vmeta_frame_ext_thermal_read(struct vmeta_buffer *buf,
 	size_t start = 0;
 	uint16_t id = 0, len = 0;
 	uint8_t flags = 0;
-	ULOG_ERRNO_RETURN_ERR_IF(buf == NULL, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
+
+	if(meta == NULL || buf == NULL) return -EINVAL;
+
+	//ULOG_ERRNO_RETURN_ERR_IF(buf == NULL, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
 
 	/* Get buffer start */
 	start = buf->pos;
@@ -1090,9 +1134,9 @@ int vmeta_frame_ext_thermal_read(struct vmeta_buffer *buf,
 	CHECK(vmeta_read_u16(buf, &id));
 	if (id != VMETA_FRAME_EXT_THERMAL_ID) {
 		res = -EPROTO;
-		ULOGE("vmeta_frame_ext: bad id: 0x%04x (0x%04x)",
-		      id,
-		      VMETA_FRAME_EXT_THERMAL_ID);
+		//ULOGE("vmeta_frame_ext: bad id: 0x%04x (0x%04x)",
+		      //id,
+		      //VMETA_FRAME_EXT_THERMAL_ID);
 		goto out;
 	}
 
@@ -1100,9 +1144,9 @@ int vmeta_frame_ext_thermal_read(struct vmeta_buffer *buf,
 	CHECK(vmeta_read_u16(buf, &len));
 	if (buf->len - start < (size_t)len * 4 + 4) {
 		res = -EPROTO;
-		ULOGE("vmeta_frame_ext: bad length: %zu (%u)",
-		      buf->len - start,
-		      len * 4 + 4);
+		//ULOGE("vmeta_frame_ext: bad length: %zu (%u)",
+		      //buf->len - start,
+		      //len * 4 + 4);
 		goto out;
 	}
 
@@ -1126,9 +1170,9 @@ int vmeta_frame_ext_thermal_read(struct vmeta_buffer *buf,
 	/* Make sure we read the correct number of bytes */
 	if (buf->pos - start != (size_t)len * 4 + 4) {
 		res = -EPROTO;
-		ULOGE("vmeta_frame_ext: bad length: %zu (%u)",
-		      buf->pos - start,
-		      len * 4 + 4);
+		//ULOGE("vmeta_frame_ext: bad length: %zu (%u)",
+		      //buf->pos - start,
+		      //len * 4 + 4);
 		goto out;
 	}
 

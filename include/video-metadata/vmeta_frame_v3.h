@@ -181,10 +181,10 @@ int vmeta_frame_v3_read(struct vmeta_buffer *buf, struct vmeta_frame_v3 *meta);
  * @param jobj: pointer to the JSON object to write to (output)
  * @return 0 on success, negative errno value in case of error
  */
-VMETA_API
+/*VMETA_API
 int vmeta_frame_v3_to_json(const struct vmeta_frame_v3 *meta,
 			   struct json_object *jobj);
-
+*/
 
 /**
  * Write "Parrot Video Metadata" v3 frame metadata as a CSV string.
@@ -196,10 +196,10 @@ int vmeta_frame_v3_to_json(const struct vmeta_frame_v3 *meta,
  * @return the number of characters written
  */
 VMETA_API
-size_t vmeta_frame_v3_to_csv(const struct vmeta_frame_v3 *meta,
+/*size_t vmeta_frame_v3_to_csv(const struct vmeta_frame_v3 *meta,
 			     char *str,
 			     size_t maxlen);
-
+*/
 
 /**
  * Write a "Parrot Video Metadata" v3 frame metadata CSV file header string.
@@ -209,8 +209,8 @@ size_t vmeta_frame_v3_to_csv(const struct vmeta_frame_v3 *meta,
  * @param maxlen: maximum length of the string
  * @return the number of characters written
  */
-VMETA_API
+/*VMETA_API
 size_t vmeta_frame_v3_csv_header(char *str, size_t maxlen);
-
+*/
 
 #endif /* !_VMETA_FRAME_V3_H_ */

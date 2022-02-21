@@ -234,11 +234,11 @@ int vmeta_frame_v1_streaming_basic_read(
  * @param jobj: pointer to the JSON object to write to (output)
  * @return 0 on success, negative errno value in case of error
  */
-VMETA_API
+/*VMETA_API
 int vmeta_frame_v1_streaming_basic_to_json(
 	const struct vmeta_frame_v1_streaming_basic *meta,
 	struct json_object *jobj);
-
+*/
 
 /**
  * Write "Parrot Video Streaming Metadata" v1 basic frame metadata as a
@@ -250,12 +250,12 @@ int vmeta_frame_v1_streaming_basic_to_json(
  * @param maxlen: maximum length of the string
  * @return the number of characters written
  */
-VMETA_API
+/*VMETA_API
 size_t vmeta_frame_v1_streaming_basic_to_csv(
 	const struct vmeta_frame_v1_streaming_basic *meta,
 	char *str,
 	size_t maxlen);
-
+*/
 
 /**
  * Write a "Parrot Video Streaming Metadata" v1 basic frame metadata CSV
@@ -266,9 +266,9 @@ size_t vmeta_frame_v1_streaming_basic_to_csv(
  * @param maxlen: maximum length of the string
  * @return the number of characters written
  */
-VMETA_API
+/*VMETA_API
 size_t vmeta_frame_v1_streaming_basic_csv_header(char *str, size_t maxlen);
-
+*/
 
 /**
  * Write "Parrot Video Streaming Metadata" v1 extended frame metadata.
@@ -317,11 +317,11 @@ int vmeta_frame_v1_streaming_extended_read(
  * @param jobj: pointer to the JSON object to write to (output)
  * @return 0 on success, negative errno value in case of error
  */
-VMETA_API
+/*VMETA_API
 int vmeta_frame_v1_streaming_extended_to_json(
 	const struct vmeta_frame_v1_streaming_extended *meta,
 	struct json_object *jobj);
-
+*/
 
 /**
  * Write "Parrot Video Streaming Metadata" v1 extended frame metadata as a
@@ -333,12 +333,12 @@ int vmeta_frame_v1_streaming_extended_to_json(
  * @param maxlen: maximum length of the string
  * @return the number of characters written
  */
-VMETA_API
+/*VMETA_API
 size_t vmeta_frame_v1_streaming_extended_to_csv(
 	const struct vmeta_frame_v1_streaming_extended *meta,
 	char *str,
 	size_t maxlen);
-
+*/
 
 /**
  * Write a "Parrot Video Streaming Metadata" v1 extended frame metadata CSV
@@ -349,9 +349,9 @@ size_t vmeta_frame_v1_streaming_extended_to_csv(
  * @param maxlen: maximum length of the string
  * @return the number of characters written
  */
-VMETA_API
+/*VMETA_API
 size_t vmeta_frame_v1_streaming_extended_csv_header(char *str, size_t maxlen);
-
+*/
 
 /**
  * Write "Parrot Video Recording Metadata" v1 frame metadata.
@@ -397,11 +397,11 @@ int vmeta_frame_v1_recording_read(struct vmeta_buffer *buf,
  * @param jobj: pointer to the JSON object to write to (output)
  * @return 0 on success, negative errno value in case of error
  */
-VMETA_API
+/*VMETA_API
 int vmeta_frame_v1_recording_to_json(
 	const struct vmeta_frame_v1_recording *meta,
 	struct json_object *jobj);
-
+*/
 
 /**
  * Write "Parrot Video Recording Metadata" v1 frame metadata as a CSV string.
@@ -412,12 +412,12 @@ int vmeta_frame_v1_recording_to_json(
  * @param maxlen: maximum length of the string
  * @return the number of characters written
  */
-VMETA_API
+/*VMETA_API
 size_t
 vmeta_frame_v1_recording_to_csv(const struct vmeta_frame_v1_recording *meta,
 				char *str,
 				size_t maxlen);
-
+*/
 
 /**
  * Write a "Parrot Video Recording Metadata" v1 frame metadata CSV file
@@ -428,8 +428,8 @@ vmeta_frame_v1_recording_to_csv(const struct vmeta_frame_v1_recording *meta,
  * @param maxlen: maximum length of the string
  * @return the number of characters written
  */
-VMETA_API
+/*VMETA_API
 size_t vmeta_frame_v1_recording_csv_header(char *str, size_t maxlen);
-
+*/
 
 #endif /* !_VMETA_FRAME_V1_H_ */

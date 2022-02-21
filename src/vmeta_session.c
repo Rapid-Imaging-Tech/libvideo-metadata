@@ -39,7 +39,9 @@ ssize_t
 vmeta_session_date_write(char *str, size_t len, time_t date, long gmtoff)
 {
 	int ret;
-	ULOG_ERRNO_RETURN_ERR_IF(str == NULL, EINVAL);
+
+	if(str == NULL) return -EINVAL;
+	//ULOG_ERRNO_RETURN_ERR_IF(str == NULL, EINVAL);
 
 	ret = time_local_format(date, gmtoff, TIME_FMT_LONG, str, len);
 	if (ret < 0)
@@ -55,9 +57,11 @@ int vmeta_session_date_read(const char *str, time_t *date, long *gmtoff)
 	uint64_t epoch_sec;
 	int32_t utc_off_sec;
 
-	ULOG_ERRNO_RETURN_ERR_IF(str == NULL, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(date == NULL, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(gmtoff == NULL, EINVAL);
+	if(str == NULL || date == NULL || gmtoff == NULL) return -EINVAL;
+
+	//ULOG_ERRNO_RETURN_ERR_IF(str == NULL, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(date == NULL, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(gmtoff == NULL, EINVAL);
 
 	ret = time_local_parse(str, &epoch_sec, &utc_off_sec);
 	if (ret < 0)
@@ -76,8 +80,10 @@ ssize_t vmeta_session_location_write(char *str,
 {
 	size_t ret;
 
-	ULOG_ERRNO_RETURN_ERR_IF(str == NULL, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(loc == NULL, EINVAL);
+	if(str == NULL || loc == NULL) return -EINVAL;
+
+	//ULOG_ERRNO_RETURN_ERR_IF(str == NULL, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(loc == NULL, EINVAL);
 
 	if (!loc->valid)
 		return 0;
@@ -117,8 +123,10 @@ int vmeta_session_location_read(const char *str, struct vmeta_location *loc)
 {
 	int ret;
 
-	ULOG_ERRNO_RETURN_ERR_IF(str == NULL, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(loc == NULL, EINVAL);
+	if(str == NULL || loc == NULL) return -EINVAL;
+
+	//ULOG_ERRNO_RETURN_ERR_IF(str == NULL, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(loc == NULL, EINVAL);
 
 	memset(loc, 0, sizeof(*loc));
 	loc->latitude = 500.;
@@ -162,8 +170,10 @@ vmeta_session_fov_write(char *str, size_t len, const struct vmeta_fov *fov)
 {
 	size_t ret;
 
-	ULOG_ERRNO_RETURN_ERR_IF(str == NULL, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(fov == NULL, EINVAL);
+	if(str == NULL || fov == NULL) return -EINVAL;
+
+	//ULOG_ERRNO_RETURN_ERR_IF(str == NULL, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(fov == NULL, EINVAL);
 
 	if ((!fov->has_horz) || (!fov->has_vert))
 		return 0;
@@ -179,8 +189,10 @@ int vmeta_session_fov_read(const char *str, struct vmeta_fov *fov)
 {
 	int ret;
 
-	ULOG_ERRNO_RETURN_ERR_IF(str == NULL, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(fov == NULL, EINVAL);
+	if(str == NULL || fov == NULL) return -EINVAL;
+
+	//ULOG_ERRNO_RETURN_ERR_IF(str == NULL, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(fov == NULL, EINVAL);
 
 	fov->has_horz = 0;
 	fov->has_vert = 0;
@@ -202,8 +214,10 @@ ssize_t vmeta_session_thermal_alignment_write(
 {
 	size_t ret;
 
-	ULOG_ERRNO_RETURN_ERR_IF(str == NULL, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(align == NULL, EINVAL);
+	if(str == NULL || align == NULL) return -EINVAL;
+
+	//ULOG_ERRNO_RETURN_ERR_IF(str == NULL, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(align == NULL, EINVAL);
 
 	ret = snprintf(str,
 		       len,
@@ -221,8 +235,10 @@ int vmeta_session_thermal_alignment_read(const char *str,
 {
 	int ret;
 
-	ULOG_ERRNO_RETURN_ERR_IF(str == NULL, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(align == NULL, EINVAL);
+	if(str == NULL || align == NULL) return -EINVAL;
+
+	//ULOG_ERRNO_RETURN_ERR_IF(str == NULL, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(align == NULL, EINVAL);
 
 	align->valid = 0;
 
@@ -245,8 +261,10 @@ ssize_t vmeta_session_thermal_conversion_write(
 {
 	size_t ret;
 
-	ULOG_ERRNO_RETURN_ERR_IF(str == NULL, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(conv == NULL, EINVAL);
+	if(str == NULL || conv == NULL) return -EINVAL;
+
+	//ULOG_ERRNO_RETURN_ERR_IF(str == NULL, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(conv == NULL, EINVAL);
 
 	ret = snprintf(str,
 		       len,
@@ -269,8 +287,10 @@ int vmeta_session_thermal_conversion_read(const char *str,
 {
 	int ret;
 
-	ULOG_ERRNO_RETURN_ERR_IF(str == NULL, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(conv == NULL, EINVAL);
+	if(str == NULL || conv == NULL) return -EINVAL;
+
+	//ULOG_ERRNO_RETURN_ERR_IF(str == NULL, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(conv == NULL, EINVAL);
 
 	conv->valid = 0;
 
@@ -296,7 +316,9 @@ vmeta_session_thermal_scale_factor_write(char *str, size_t len, double value)
 {
 	size_t ret;
 
-	ULOG_ERRNO_RETURN_ERR_IF(str == NULL, EINVAL);
+	if(str == NULL) return -EINVAL;
+
+	//ULOG_ERRNO_RETURN_ERR_IF(str == NULL, EINVAL);
 
 	ret = snprintf(
 		str, len, VMETA_SESSION_THERMAL_SCALE_FACTOR_FORMAT, value);
@@ -309,8 +331,10 @@ int vmeta_session_thermal_scale_factor_read(const char *str, double *value)
 {
 	int ret;
 
-	ULOG_ERRNO_RETURN_ERR_IF(str == NULL, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(value == NULL, EINVAL);
+	if(str == NULL || value == NULL) return -EINVAL;
+
+	//ULOG_ERRNO_RETURN_ERR_IF(str == NULL, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(value == NULL, EINVAL);
 
 	ret = sscanf(str, "%lf", value);
 	if (ret != 1)
@@ -325,8 +349,11 @@ int vmeta_session_streaming_sdes_write(
 	vmeta_session_streaming_sdes_write_cb_t cb,
 	void *userdata)
 {
-	ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(cb == NULL, EINVAL);
+
+	if(meta == NULL || cb == NULL) return -EINVAL;
+
+	//ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(cb == NULL, EINVAL);
 
 	if (meta->serial_number[0] != '\0') {
 		(*cb)(VMETA_STRM_SDES_TYPE_CNAME,
@@ -582,11 +609,13 @@ int vmeta_session_streaming_sdes_read(enum vmeta_stream_sdes_type type,
 {
 	int ret = 0;
 
-	ULOG_ERRNO_RETURN_ERR_IF(value == NULL, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF((type == VMETA_STRM_SDES_TYPE_PRIV) &&
-					 (prefix == NULL),
-				 EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
+	if(value == NULL || meta == NULL || ((type == VMETA_STRM_SDES_TYPE_PRIV) && (prefix == NULL))) return -EINVAL;
+
+	//ULOG_ERRNO_RETURN_ERR_IF(value == NULL, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF((type == VMETA_STRM_SDES_TYPE_PRIV) &&
+					 //(prefix == NULL),
+				 //EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
 
 	switch (type) {
 	case VMETA_STRM_SDES_TYPE_CNAME:
@@ -740,8 +769,11 @@ int vmeta_session_streaming_sdp_write(const struct vmeta_session *meta,
 				      vmeta_session_streaming_sdp_write_cb_t cb,
 				      void *userdata)
 {
-	ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(cb == NULL, EINVAL);
+
+	if(meta == NULL || cb == NULL) return -EINVAL;
+
+	//ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(cb == NULL, EINVAL);
 
 	/* Below: session-level only metadata */
 
@@ -1023,12 +1055,16 @@ int vmeta_session_streaming_sdp_read(enum vmeta_stream_sdp_type type,
 {
 	int ret = 0;
 
-	ULOG_ERRNO_RETURN_ERR_IF(value == NULL, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(((type == VMETA_STRM_SDP_TYPE_SESSION_ATTR) ||
-				  (type == VMETA_STRM_SDP_TYPE_MEDIA_ATTR)) &&
-					 (key == NULL),
-				 EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
+	if(value == NULL || meta == NULL || (((type == VMETA_STRM_SDP_TYPE_SESSION_ATTR) ||
+					       (type == VMETA_STRM_SDP_TYPE_MEDIA_ATTR)) &&
+					      (key == NULL))) return -EINVAL;
+
+	//ULOG_ERRNO_RETURN_ERR_IF(value == NULL, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(((type == VMETA_STRM_SDP_TYPE_SESSION_ATTR) ||
+				  //(type == VMETA_STRM_SDP_TYPE_MEDIA_ATTR)) &&
+					//(key == NULL),
+				 //EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
 
 	switch (type) {
 	case VMETA_STRM_SDP_TYPE_SESSION_INFO:
@@ -1168,8 +1204,11 @@ int vmeta_session_recording_write(const struct vmeta_session *meta,
 				  vmeta_session_recording_write_cb_t cb,
 				  void *userdata)
 {
-	ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(cb == NULL, EINVAL);
+
+	if(meta == NULL || cb == NULL) return -EINVAL;
+
+	//ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(cb == NULL, EINVAL);
 
 	if (meta->friendly_name[0] != '\0') {
 		(*cb)(VMETA_REC_UDTA,
@@ -1466,7 +1505,7 @@ int vmeta_session_recording_write(const struct vmeta_session *meta,
 }
 
 
-static int vmeta_session_recording_json_comment_read(const char *value,
+/*static int vmeta_session_recording_json_comment_read(const char *value,
 						     struct vmeta_session *meta)
 {
 	int ret = 0;
@@ -1480,7 +1519,7 @@ static int vmeta_session_recording_json_comment_read(const char *value,
 		goto out;
 	}
 
-	/* software_version */
+
 	if (meta->software_version[0] == '\0') {
 		jret = json_object_object_get_ex(
 			jobj, VMETA_REC_UDTA_JSON_KEY_SOFTWARE_VERSION, &jitem);
@@ -1490,7 +1529,7 @@ static int vmeta_session_recording_json_comment_read(const char *value,
 		}
 	}
 
-	/* run_id */
+
 	if (meta->run_id[0] == '\0') {
 		jret = json_object_object_get_ex(
 			jobj, VMETA_REC_UDTA_JSON_KEY_RUN_ID, &jitem);
@@ -1498,7 +1537,7 @@ static int vmeta_session_recording_json_comment_read(const char *value,
 			COPY_VALUE(meta->run_id, json_object_get_string(jitem));
 	}
 
-	/* takeoff_loc */
+
 	if (!meta->takeoff_loc.valid) {
 		jret = json_object_object_get_ex(
 			jobj, VMETA_REC_UDTA_JSON_KEY_TAKEOFF_LOC, &jitem);
@@ -1511,7 +1550,7 @@ static int vmeta_session_recording_json_comment_read(const char *value,
 		}
 	}
 
-	/* media_date */
+
 	if (meta->media_date == 0) {
 		jret = json_object_object_get_ex(
 			jobj, VMETA_REC_UDTA_JSON_KEY_MEDIA_DATE, &jitem);
@@ -1525,7 +1564,7 @@ static int vmeta_session_recording_json_comment_read(const char *value,
 		}
 	}
 
-	/* picture_fov.horz */
+
 	if (!meta->picture_fov.has_horz) {
 		jret = json_object_object_get_ex(
 			jobj, VMETA_REC_UDTA_JSON_KEY_PICTURE_HORZ_FOV, &jitem);
@@ -1535,7 +1574,7 @@ static int vmeta_session_recording_json_comment_read(const char *value,
 		}
 	}
 
-	/* picture_fov.vert */
+
 	if (!meta->picture_fov.has_vert) {
 		jret = json_object_object_get_ex(
 			jobj, VMETA_REC_UDTA_JSON_KEY_PICTURE_VERT_FOV, &jitem);
@@ -1548,6 +1587,7 @@ static int vmeta_session_recording_json_comment_read(const char *value,
 out:
 	return ret;
 }
+*/
 
 
 int vmeta_session_recording_read(const char *key,
@@ -1556,9 +1596,11 @@ int vmeta_session_recording_read(const char *key,
 {
 	int ret = 0;
 
-	ULOG_ERRNO_RETURN_ERR_IF(key == NULL, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(value == NULL, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
+	if(key == NULL || value == NULL || meta == NULL) return -EINVAL;
+
+	//ULOG_ERRNO_RETURN_ERR_IF(key == NULL, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(value == NULL, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
 
 	if (strcmp(key, VMETA_REC_META_KEY_FRIENDLY_NAME) == 0) {
 		COPY_VALUE(meta->friendly_name, value);
@@ -1653,8 +1695,8 @@ int vmeta_session_recording_read(const char *key,
 		   (meta->comment[0] == '\0')) {
 		if ((value[0] == '{') && (value[strlen(value) - 1] == '}')) {
 			/* The comment is a JSON string */
-			ret = vmeta_session_recording_json_comment_read(value,
-									meta);
+			//ret = vmeta_session_recording_json_comment_read(value,
+									//meta);
 		} else {
 			/* This is a real comment */
 			COPY_VALUE(meta->comment, value);
@@ -1742,7 +1784,7 @@ int vmeta_session_recording_read(const char *key,
 }
 
 
-int vmeta_session_to_json(const struct vmeta_session *meta,
+/*int vmeta_session_to_json(const struct vmeta_session *meta,
 			  struct json_object *jobj)
 {
 	ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
@@ -1888,7 +1930,7 @@ int vmeta_session_to_json(const struct vmeta_session *meta,
 	}
 
 	return 0;
-}
+}*/
 
 
 int vmeta_session_to_str(const struct vmeta_session *meta,
@@ -1897,8 +1939,10 @@ int vmeta_session_to_str(const struct vmeta_session *meta,
 {
 	size_t len = 0;
 
-	ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
-	ULOG_ERRNO_RETURN_ERR_IF(str == NULL, EINVAL);
+	if(str == NULL || meta == NULL) return -EINVAL;
+
+	//ULOG_ERRNO_RETURN_ERR_IF(meta == NULL, EINVAL);
+	//ULOG_ERRNO_RETURN_ERR_IF(str == NULL, EINVAL);
 
 	if (meta->friendly_name[0] != '\0') {
 		VMETA_STR_PRINT(str + len,
